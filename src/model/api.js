@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const router = new Router();
-let products = [{ title: "onion-rings", price: 200, thumbnail: "https://i.ibb.co/Fzbhvp9/onion-rings.jpg", id: 1 }];
+let products = [];
 
 //MIDDLEWARES
 function productsAvailable(req, res, next) {
@@ -41,7 +41,7 @@ router.get("/:id", productsAvailable, validateId, productExists, (req, res) => {
 
 //------------- POST HANDLING -------------------------------------//
 router.post("/", (req, res) => {
-	const newId = products[products.length - 1].id + 1;
+	const newId = products.length > 0 ? products[products.length - 1].id + 1 : 1;
 	products.push({ ...req.body, id: newId });
 
 	res.json(products[products.length - 1]);
