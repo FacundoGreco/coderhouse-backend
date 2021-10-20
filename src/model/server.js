@@ -2,7 +2,10 @@ const express = require("express");
 const app = express();
 const { router } = require("./api.js");
 
+//MIDDLEWARES
+
 //ROUTES
+app.use(express.static("./public"));
 app.use("/api/products", router);
 
 //START SERVER

@@ -2,6 +2,9 @@ const { Router } = require("express");
 const router = new Router();
 const products = [];
 
+//MIDDLEWARES
+
+//ROUTES
 // router.get("/", (req, res) => {
 // 	res.send(products);
 // });
