@@ -18,18 +18,25 @@ function validateId(req, res, next) {
 	}
 }
 
+function productExists(req, res, next) {
+	const id = Number(req.params.id);
+	const product = products.find((product) => product.id === id);
+
+	if (!product) return res.send("<h1>There isn't any product with that ID</h1>");
+	else next();
+}
+
 //ROUTES
 //------------- GET HANDLING -------------------------------------//
 router.get("/", productsAvailable, (req, res) => {
 	res.json(products);
 });
 
-router.get("/:id", productsAvailable, validateId, (req, res) => {
+router.get("/:id", productsAvailable, validateId, productExists, (req, res) => {
 	const id = Number(req.params.id);
 	const product = products.find((product) => product.id === id);
 
-	if (!product) return res.send("<h1>There isn't any product with that ID</h1>");
-	else res.json(product);
+	res.json(product);
 });
 
 //------------- POST HANDLING -------------------------------------//
@@ -38,6 +45,22 @@ router.post("/", (req, res) => {
 	products.push({ ...req.body, id: newId });
 
 	res.json(products[products.length - 1]);
+});
+
+//------------- PUT HANDLING -------------------------------------//
+router.put("/:id", productsAvailable, validateId, productExists, (req, res) => {
+	const id = Number(req.params.id);
+	const product = products.find((product) => product.id === id);
+
+	const { title, price, thumbnail } = req.body;
+
+	product.title = title ?? product.title;
+	product.price = price ?? product.price;
+	product.thumbnail = thumbnail ?? product.thumbnail;
+
+	console.log(products);
+
+	res.json(product);
 });
 
 exports.router = router;
