@@ -32,5 +32,12 @@ router.get("/:id", productsAvailable, validateId, (req, res) => {
 	else res.json(product);
 });
 
-//------------- GET HANDLING -------------------------------------//
+//------------- POST HANDLING -------------------------------------//
+router.post("/", (req, res) => {
+	const newId = products[products.length - 1].id + 1;
+	products.push({ ...req.body, id: newId });
+
+	res.json(products[products.length - 1]);
+});
+
 exports.router = router;
