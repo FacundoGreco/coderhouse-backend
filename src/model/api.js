@@ -1,18 +1,18 @@
 const { Router } = require("express");
 const router = new Router();
-let products = [];
+let products = [1];
 
 //MIDDLEWARES
 function productsAvailable(req, res, next) {
-	if (products.length === 0) return res.send("<h1>There aren't products loaded.</h1>");
+	if (products.length === 0) return res.json({ error: "There aren't products loaded." });
 	else next();
 }
 
 function validateId(req, res, next) {
 	const id = Number(req.params.id);
 
-	if (isNaN(id)) return res.send("<h1>The ID entered is not a number.</h1>");
-	else if (!Number.isInteger(id)) return res.send("<h1>The ID entered is not an integer.</h1>");
+	if (isNaN(id)) return res.json({ error: "The ID entered is not a number." });
+	else if (!Number.isInteger(id)) return res.json({ error: "The ID entered is not an integer." });
 	else {
 		next();
 	}
@@ -22,7 +22,7 @@ function productExists(req, res, next) {
 	const id = Number(req.params.id);
 	const product = products.find((product) => product.id === id);
 
-	if (!product) return res.send("<h1>There isn't any product with that ID</h1>");
+	if (!product) return res.json({ error: "product not found" });
 	else next();
 }
 
