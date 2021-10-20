@@ -3,6 +3,8 @@ const app = express();
 const { router } = require("./api.js");
 
 //MIDDLEWARES
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 //ROUTES
 app.use(express.static("./public"));
