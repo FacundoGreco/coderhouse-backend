@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const router = new Router();
-const products = [{ title: "onion-rings", price: 200, thumbnail: "https://i.ibb.co/Fzbhvp9/onion-rings.jpg", id: 1 }];
+let products = [{ title: "onion-rings", price: 200, thumbnail: "https://i.ibb.co/Fzbhvp9/onion-rings.jpg", id: 1 }];
 
 //MIDDLEWARES
 function productsAvailable(req, res, next) {
@@ -27,7 +27,7 @@ function productExists(req, res, next) {
 }
 
 //ROUTES
-//------------- GET HANDLING -------------------------------------//
+//------------- GET HANDLING --------------------------------------//
 router.get("/", productsAvailable, (req, res) => {
 	res.json(products);
 });
@@ -47,7 +47,7 @@ router.post("/", (req, res) => {
 	res.json(products[products.length - 1]);
 });
 
-//------------- PUT HANDLING -------------------------------------//
+//------------- PUT HANDLING --------------------------------------//
 router.put("/:id", productsAvailable, validateId, productExists, (req, res) => {
 	const id = Number(req.params.id);
 	const product = products.find((product) => product.id === id);
@@ -58,9 +58,16 @@ router.put("/:id", productsAvailable, validateId, productExists, (req, res) => {
 	product.price = price ?? product.price;
 	product.thumbnail = thumbnail ?? product.thumbnail;
 
-	console.log(products);
-
 	res.json(product);
 });
 
+//------------- DELETE HANDLING -----------------------------------//
+router.delete("/:id", productsAvailable, validateId, productExists, (req, res) => {
+	const id = Number(req.params.id);
+	products = products.filter((product) => product.id !== id);
+
+	res.json({ id: id });
+});
+
+//EXPORTS
 exports.router = router;
