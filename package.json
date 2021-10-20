@@ -2,14 +2,22 @@
 	"dependencies": {
 		"express": "^4.17.1"
 	},
-	"name": "desafio-3",
+	"name": "coderhouse-backend",
 	"version": "1.0.0",
-	"main": "./src/model/glitchServer.js",
+	"main": "./src/model/server.js",
 	"devDependencies": {},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
-	"author": "",
+	"author": "Facundo Greco",
 	"license": "ISC",
-	"description": ""
+	"description": "This is a project for my backend programming course at CoderHouse.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/FacundoGreco/coderhouse-backend.git"
+	},
+	"bugs": {
+		"url": "https://github.com/FacundoGreco/coderhouse-backend/issues"
+	},
+	"homepage": "https://github.com/FacundoGreco/coderhouse-backend#readme"
 }
