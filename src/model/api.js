@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const router = new Router();
-let products = [1];
+let products = [];
 
 //MIDDLEWARES
 function productsAvailable(req, res, next) {
