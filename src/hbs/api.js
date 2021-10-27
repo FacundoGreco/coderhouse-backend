@@ -44,7 +44,7 @@ router.post("/", (req, res) => {
 	const newId = products.length > 0 ? products[products.length - 1].id + 1 : 1;
 	products.push({ ...req.body, id: newId });
 
-	res.json(products[products.length - 1]);
+	res.redirect("/");
 });
 
 //------------- PUT HANDLING --------------------------------------//

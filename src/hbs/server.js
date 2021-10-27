@@ -7,7 +7,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //ROUTES
-app.use(express.static("./public"));
 app.use("/api/products", router);
 
 //START SERVER
