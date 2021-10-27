@@ -1,7 +1,9 @@
 {
 	"dependencies": {
+		"ejs": "^3.1.6",
 		"express": "^4.17.1",
-		"express-handlebars": "^5.3.4"
+		"express-handlebars": "^5.3.4",
+		"pug": "^3.0.2"
 	},
 	"name": "coderhouse-backend",
 	"version": "1.0.0",
