@@ -1,0 +1,28 @@
+extends ../layouts/index
+block variables 
+	- var title = title
+	- var title2 = title2
+
+block content
+	table(class="table table-bordered table-dark w-75 mx-auto")
+		tr(class="text-warning")
+			th Image
+			th Title
+			th Price
+		
+		if products && products.length>0 
+		
+			each product in products
+
+				tr
+					td 
+						img(class="productImg" src=product.imageUrl alt="Img")
+					td=product.title 
+					td=product.price  
+		
+		else
+			tr
+				td(colspan="4")
+					h3 No products found.
+		
+
