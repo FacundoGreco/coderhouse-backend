@@ -22,11 +22,22 @@ app.use(express.static("./src/public"));
 
 //ROUTES
 app.get("/", (req, res) => {
-	res.render("./partials/form", { title: "Load Products" });
+	res.render("./partials/form", {
+		title: "Form",
+		title2: "Load Products",
+		goToPage: "Products",
+		goToPageUrl: "/products",
+	});
 });
 
 app.get("/products", (req, res) => {
-	res.render("./partials/products", { title: "Products Added", products: products });
+	res.render("./partials/products", {
+		title: "Products",
+		title2: "Products Added",
+		goToPage: "Form",
+		goToPageUrl: "/",
+		products: products,
+	});
 });
 
 app.use("/api/products", router);

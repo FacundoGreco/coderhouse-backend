@@ -13,11 +13,22 @@ app.use(express.static("./src/public"));
 
 //ROUTES
 app.get("/", (req, res) => {
-	res.render("./partials/form", { title: "Form", title2: "Load Products" });
+	res.render("./partials/form", {
+		title: "Form",
+		title2: "Load Products",
+		goToPage: "Products",
+		goToPageUrl: "/products",
+	});
 });
 
 app.get("/products", (req, res) => {
-	res.render("./partials/productsTable", { title: "Products", title2: "Products", products: products });
+	res.render("./partials/productsTable", {
+		title: "Products",
+		title2: "Products",
+		goToPage: "Form",
+		goToPageUrl: "/",
+		products: products,
+	});
 });
 
 app.use("/api/products", router);
