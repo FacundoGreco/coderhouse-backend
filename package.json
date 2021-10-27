@@ -1,11 +1,11 @@
 {
 	"dependencies": {
-		"express": "^4.17.1"
+		"express": "^4.17.1",
+		"express-handlebars": "^5.3.4"
 	},
 	"name": "coderhouse-backend",
 	"version": "1.0.0",
 	"main": "./src/hbs/server.js",
-	"devDependencies": {},
 	"scripts": {
 		"start": "node src/hbs/server",
 		"test": "echo \"Error: no test specified\" && exit 1"

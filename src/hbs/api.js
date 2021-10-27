@@ -71,3 +71,4 @@ router.delete("/:id", productsAvailable, validateId, productExists, (req, res) =
 
 //EXPORTS
 exports.router = router;
+exports.products = products;
