@@ -1,12 +1,12 @@
 # Description
 
-This is a project for my backend programming course at CoderHouse.
+This is a challenge for my backend programming course at CoderHouse. It's a form to add products, and a product table list.
 
 ## Implemented
 
 - Server with express.
-- RESTFUL API with express.
+- API with express.
 - Express router.
 - Express static.
-- Middlewares.
-- Handle GET, POST, PUT and DELETE from Thunder Client, Postman, or HTML form.
+- Template Engines
+- EJS, Handlebars, Pug
