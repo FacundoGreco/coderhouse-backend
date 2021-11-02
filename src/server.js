@@ -1,7 +1,11 @@
 const express = require("express");
+const { Server: HttpServer } = require("http");
+const { Server: IOServer } = require("socket.io");
 const app = express();
-const handlebars = require("express-handlebars");
+const httpServer = new HttpServer(app);
+const io = new IOServer(httpServer);
 const { router } = require("./api.js");
+
 let { products } = require("./api");
 
 //MIDDLEWARES
@@ -21,8 +25,12 @@ app.use("/api/products", router);
 //START SERVER
 const PORT = process.env.PORT || 8080;
 
-const server = app.listen(PORT, () => {
+const server = httpServer.listen(PORT, () => {
 	console.log(`Server on port ${server.address().port}`);
 });
-
 server.on("error", (err) => console.log(`Error in server: ${err}`));
+
+//SOCKETS
+io.on("connection", (socket) => {
+	console.log("User connected...");
+});
