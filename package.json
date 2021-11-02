@@ -9,7 +9,7 @@
 	"version": "1.0.0",
 	"main": "./src/hbs/server.js",
 	"scripts": {
-		"start": "node src/hbs/server",
+		"start": "node src/server",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Facundo Greco",

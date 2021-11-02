@@ -5,39 +5,15 @@ const { router } = require("./api.js");
 let { products } = require("./api");
 
 //MIDDLEWARES
-app.engine(
-	"hbs",
-	handlebars({
-		extname: ".hbs",
-		defaultLayout: "index.hbs",
-		layoutsDir: __dirname + "/views/layouts",
-		partialsDir: __dirname + "/views/partials",
-	})
-);
-app.set("view engine", "hbs");
-app.set("views", "./src/hbs/views");
+app.set("view engine", "ejs");
+app.set("views", "./src/views");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
 
 //ROUTES
 app.get("/", (req, res) => {
-	res.render("./partials/form", {
-		title: "Form",
-		title2: "Load Products",
-		goToPage: "Products",
-		goToPageUrl: "/products",
-	});
-});
-
-app.get("/products", (req, res) => {
-	res.render("./partials/products", {
-		title: "Products",
-		title2: "Products Added",
-		goToPage: "Form",
-		goToPageUrl: "/",
-		products: products,
-	});
+	res.render("./pages/index", { products: [] });
 });
 
 app.use("/api/products", router);

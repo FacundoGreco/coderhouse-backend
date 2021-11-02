@@ -1,0 +1,24 @@
+<html lang="en">
+	<head>
+		<title>WebSockets</title>
+		<%- include("../partials/head") %>
+	</head>
+	<body>
+		<div class="productsSection d-flex flex-column align-items-center">
+			<h2>Products</h2>
+
+			<div class="productsContainer d-flex flex-column align-items-center bg-dark w-50">
+				<%- include("../partials/form") %>
+
+				<div class="productsTableContainer bg-dark text-white w-100 px-3">
+					<h3 class="text-center mb-3 mt-3">Products</h3>
+					<%- include("../partials/productsTable") %>
+				</div>
+			</div>
+		</div>
+
+		<div class="chatSection d-flex flex-column align-items-center">
+			<h2>Chat</h2>
+		</div>
+	</body>
+</html>
