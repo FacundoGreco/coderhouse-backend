@@ -1,16 +1,14 @@
 const express = require("express");
-const { Server: HttpServer } = require("http");
-const { Server: IOServer } = require("socket.io");
 const app = express();
-const httpServer = new HttpServer(app);
-const io = new IOServer(httpServer);
 const { router } = require("./api.js");
+// const { Server: HttpServer } = require("http");
+// const httpServer = new HttpServer(app);
 
 let { products } = require("./api");
 
 //MIDDLEWARES
 app.set("view engine", "ejs");
-app.set("views", "./src/views");
+app.set("views", "./src/public/views");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
@@ -25,12 +23,19 @@ app.use("/api/products", router);
 //START SERVER
 const PORT = process.env.PORT || 8080;
 
-const server = httpServer.listen(PORT, () => {
+const server = app.listen(PORT, () => {
 	console.log(`Server on port ${server.address().port}`);
 });
 server.on("error", (err) => console.log(`Error in server: ${err}`));
 
-//SOCKETS
+//WEBSOCKETS
+const { Server: IOServer } = require("socket.io");
+const io = new IOServer(server);
+
 io.on("connection", (socket) => {
 	console.log("User connected...");
+
+	socket.emit("loadProducts", products);
 });
+
+exports.io = io;

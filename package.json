@@ -8,7 +8,7 @@
 	},
 	"name": "coderhouse-backend",
 	"version": "1.0.0",
-	"main": "./src/hbs/server.js",
+	"main": "./src/server.js",
 	"scripts": {
 		"start": "node src/server",
 		"test": "echo \"Error: no test specified\" && exit 1"
