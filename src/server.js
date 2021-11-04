@@ -1,10 +1,11 @@
 const express = require("express");
 const app = express();
-const { router } = require("./api.js");
+const { router: productsRouter } = require("./productsApi.js");
+const { router: chatRouter } = require("./chatApi.js");
 // const { Server: HttpServer } = require("http");
 // const httpServer = new HttpServer(app);
 
-let { products } = require("./api");
+let { products } = require("./productsApi");
 
 //MIDDLEWARES
 app.set("view engine", "ejs");
@@ -21,7 +22,8 @@ app.get("/", (req, res) => {
 	});
 });
 
-app.use("/api/products", router);
+app.use("/api/products", productsRouter);
+app.use("/api/chat", chatRouter);
 
 //START SERVER
 const PORT = process.env.PORT || 8080;
