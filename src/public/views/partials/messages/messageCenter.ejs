@@ -1,0 +1,17 @@
+<div class="messageCenter w-100 d-flex flex-column justify-content-start align-items-center">
+	<div class="form-group w-100 mb-4 border-bottom border-light pb-2">
+		<label for="email">Email</label>
+		<input class="form-control" type="email" id="email" placeholder="myname@mail.com" required />
+	</div>
+
+	<%- include("./chat") %>
+
+	<div class="sendMessage w-100 d-flex justify-content-between align-items-end my-4">
+		<div class="form-group w-50">
+			<label for="message">Message</label>
+			<input class="form-control" type="message" id="message" placeholder="This is my message." disabled />
+		</div>
+
+		<button class="sendButton w-25 btn btn-primary">Send</button>
+	</div>
+</div>

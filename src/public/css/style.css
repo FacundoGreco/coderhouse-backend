@@ -1,3 +1,11 @@
+.productsContainer {
+	min-height: 600px;
+}
+
+.messageCenterContainer {
+	min-height: 675px;
+}
+
 .productImg {
 	width: 50px;
 }

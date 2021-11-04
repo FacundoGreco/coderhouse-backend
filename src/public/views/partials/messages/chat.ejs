@@ -1,0 +1,15 @@
+<div class="chat w-100 border border-light p-2">
+	<% if (messages && messages.length > 0) { %> <% messages.forEach(message => { %>
+
+	<li class="d-flex w-100 mb-3">
+		<div class="messageInfo w-25">
+			<p class="email"><b><%= message.email %></b></p>
+			<p class="date"><%= message.date %></p>
+		</div>
+		<p class="message w-75"><i><%= message.message %></i></p>
+	</li>
+
+	<%})%> <% }else{%>
+	<h3 class="text-center m-3">There aren't messages...</h3>
+	<% }%>
+</div>

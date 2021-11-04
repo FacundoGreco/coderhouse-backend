@@ -1,7 +1,13 @@
 const socket = io();
 const productsTableContainer = document.querySelector(".productsTableContainer");
-const messageCenterContainer = document.querySelector(".messageCenterContainer");
 const form = document.querySelector(".addProductForm");
+const messageCenter = document.querySelector(".messageCenter");
+const sendMessage = messageCenter.querySelector(".sendMessage");
+const emailInput = messageCenter.querySelector("#email");
+const messageInput = messageCenter.querySelector("#message");
+const sendButton = messageCenter.querySelector(".sendButton");
+
+//-----------------SOCKETS---------------------//
 
 //ON LOAD PRODUCTS
 socket.on("loadProducts", async (products) => {
@@ -10,7 +16,7 @@ socket.on("loadProducts", async (products) => {
 	productsTableContainer.removeChild(oldProductsTable);
 
 	//Fetches productsTable and compiles it
-	const productsTableFile = await fetch("views/partials/productsTable.ejs");
+	const productsTableFile = await fetch("views/partials/products/productsTable.ejs");
 	const productsTableEjs = await productsTableFile.text();
 
 	//Renders table
@@ -20,22 +26,63 @@ socket.on("loadProducts", async (products) => {
 
 //ON LOAD MESSAGES
 socket.on("loadMessages", async (messages) => {
-	console.log(messages);
-	//Removes old messageCenter
-	let oldmessageCenter = messageCenterContainer.querySelector(".messageCenter");
-	messageCenterContainer.removeChild(oldmessageCenter);
+	//Removes old chat
+	let oldChat = messageCenter.querySelector(".chat");
+	messageCenter.removeChild(oldChat);
 
-	//Fetches messageCenter and compiles it
-	const messageCenterFile = await fetch("views/partials/messageCenter.ejs");
-	const messageCenterEjs = await messageCenterFile.text();
+	//Fetches chat and compiles it
+	const chatFile = await fetch("views/partials/messages/chat.ejs");
+	const chatEjs = await chatFile.text();
 
-	//Renders table
-	const messageCenter = ejs.render(messageCenterEjs, { messages: messages });
-	messageCenterContainer.innerHTML += messageCenter;
+	const chat = ejs.render(chatEjs, { messages: messages });
+	const wrapper = document.createElement("div");
+	wrapper.innerHTML = chat;
+
+	//Renders chat
+	const chatNode = wrapper.firstChild;
+
+	messageCenter.insertBefore(chatNode, sendMessage);
 });
 
-//ON SUBMIT
+//-----------------FORM CONTROL---------------------//
+//LOAD PRODUCTS
+
+//ON SUBMIT ADD PRODUCT
 form.addEventListener("submit", async (e) => {
+	e.preventDefault();
+
+	//Get input values
+	const title = e.target.querySelector("#title").value;
+	const price = e.target.querySelector("#price").value;
+	const imageUrl = e.target.querySelector("#imageUrl").value;
+	const newProduct = { title: title, price: price, imageUrl: imageUrl };
+
+	try {
+		//Post new product
+		await fetch("/api/products/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(newProduct),
+		});
+
+		//Reset input values
+		form.reset();
+	} catch (err) {
+		console.log(err);
+	}
+});
+
+//MESSAGE CENTER
+
+//ON CHANGE EMAIL
+emailInput.addEventListener("change", (e) => {
+	messageInput.disabled = emailInput.value != "" ? false : true;
+});
+
+//ON SEND MESSAGE
+sendButton.addEventListener("click", async (e) => {
 	e.preventDefault();
 
 	//Get input values
