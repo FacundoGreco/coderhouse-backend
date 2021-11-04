@@ -1,3 +1,24 @@
 .productImg {
 	width: 50px;
 }
+
+.chat {
+	min-height: 400px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	list-style-type: none;
+}
+
+.chat li p {
+	margin: 0;
+}
+
+.chat li .email {
+	color: rgb(52, 140, 255);
+}
+.chat li .date {
+	color: brown;
+}
+.chat li .message {
+	color: green;
+}

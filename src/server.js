@@ -15,7 +15,10 @@ app.use(express.static("./src/public"));
 
 //ROUTES
 app.get("/", (req, res) => {
-	res.render("./pages/index", { products: [] });
+	res.render("./pages/index", {
+		products: [],
+		messages: [],
+	});
 });
 
 app.use("/api/products", router);
