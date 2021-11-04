@@ -6,6 +6,7 @@ const { router: chatRouter } = require("./chatApi.js");
 // const httpServer = new HttpServer(app);
 
 let { products } = require("./productsApi");
+let { messages } = require("./chatApi");
 
 //MIDDLEWARES
 app.set("view engine", "ejs");
@@ -41,6 +42,7 @@ io.on("connection", (socket) => {
 	console.log("User connected...");
 
 	socket.emit("loadProducts", products);
+	socket.emit("loadMessages", messages);
 });
 
 exports.io = io;
