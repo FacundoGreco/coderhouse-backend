@@ -1,12 +1,9 @@
 const express = require("express");
 const app = express();
 const { router: productsRouter } = require("./productsApi.js");
-const { router: chatRouter } = require("./chatApi.js");
-// const { Server: HttpServer } = require("http");
-// const httpServer = new HttpServer(app);
+const { router: chatRouter, getMessages } = require("./chatApi.js");
 
 let { products } = require("./productsApi");
-let { messages } = require("./chatApi");
 
 //MIDDLEWARES
 app.set("view engine", "ejs");
@@ -38,8 +35,11 @@ server.on("error", (err) => console.log(`Error in server: ${err}`));
 const { Server: IOServer } = require("socket.io");
 const io = new IOServer(server);
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
 	console.log("User connected...");
+
+	//Fetch messages
+	const messages = await getMessages();
 
 	socket.emit("loadProducts", products);
 	socket.emit("loadMessages", messages);
