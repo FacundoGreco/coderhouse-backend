@@ -26,6 +26,8 @@ socket.on("loadProducts", async (products) => {
 
 //ON LOAD MESSAGES
 socket.on("loadMessages", async (messages) => {
+	sendButton.disabled = !messages ? true : false;
+
 	//Removes old chat
 	let oldChat = messageCenter.querySelector(".chat");
 	messageCenter.removeChild(oldChat);
@@ -81,28 +83,38 @@ emailInput.addEventListener("change", (e) => {
 	messageInput.disabled = emailInput.value != "" ? false : true;
 });
 
+//GET FORMATTED DATE
+function getFormattedDate() {
+	const date = new Date();
+	const formattedDate = `${date.getDate()}/${
+		date.getMonth() + 1
+	}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+
+	return formattedDate;
+}
+
 //ON SEND MESSAGE
 sendButton.addEventListener("click", async (e) => {
 	e.preventDefault();
 
 	//Get input values
-	const title = e.target.querySelector("#title").value;
-	const price = e.target.querySelector("#price").value;
-	const imageUrl = e.target.querySelector("#imageUrl").value;
-	const newProduct = { title: title, price: price, imageUrl: imageUrl };
+	const email = emailInput.value;
+	const date = getFormattedDate();
+	const message = messageInput.value;
+	const newMessage = { email: email, date: date, message: message };
 
 	try {
 		//Post new product
-		await fetch("/api/products/", {
+		await fetch("/api/chat/", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(newProduct),
+			body: JSON.stringify(newMessage),
 		});
 
-		//Reset input values
-		form.reset();
+		//Reset message input values
+		messageInput.value = "";
 	} catch (err) {
 		console.log(err);
 	}
