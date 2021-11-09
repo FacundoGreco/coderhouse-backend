@@ -7,10 +7,15 @@ const { router: productsRouter } = require("./routers/apiProducts.js");
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 
-//ROUTES
+//ROUTERS
 // app.use(express.static("./public"));
 app.use("/api/products", productsRouter);
 // app.use("/api/carts", cartsRouter);
+
+//ROUTES
+app.all("*", (req, res) => {
+	res.status(404).json({ error: 404, descripción: `Route '${req.url}' and method '${req.method}' not implemented.` });
+});
 
 //START SERVER
 const PORT = process.env.PORT || 8080;
