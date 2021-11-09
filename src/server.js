@@ -1,14 +1,16 @@
 const express = require("express");
 const app = express();
-const { router } = require("./routers/apiProducts.js");
+const { router: productsRouter } = require("./routers/apiProducts.js");
+// const { cartsRouter } = require("./routers/apiCarts.js");
 
 //MIDDLEWARES
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
 
 //ROUTES
-app.use(express.static("./public"));
-app.use("/api/products", router);
+// app.use(express.static("./public"));
+app.use("/api/products", productsRouter);
+// app.use("/api/carts", cartsRouter);
 
 //START SERVER
 const PORT = process.env.PORT || 8080;
