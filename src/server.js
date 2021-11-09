@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const { router } = require("./api.js");
+const { router } = require("./routers/apiProducts.js");
 
 //MIDDLEWARES
 app.use(express.json());
