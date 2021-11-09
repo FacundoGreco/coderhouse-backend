@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const { router: productsRouter } = require("./routers/apiProducts.js");
 // const { cartsRouter } = require("./routers/apiCarts.js");
+let admin = true;
 
 //MIDDLEWARES
 app.use(express.json());
