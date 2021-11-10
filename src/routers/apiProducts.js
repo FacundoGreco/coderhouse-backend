@@ -1,73 +1,98 @@
 const { Router } = require("express");
 const router = new Router();
-let products = [];
+const { Products } = require("../model/productsModel");
+let admin = true;
 
 //MIDDLEWARES
-function productsAvailable(req, res, next) {
-	if (products.length === 0) return res.json({ error: "There aren't products loaded." });
-	else next();
-}
-
 function validateId(req, res, next) {
-	const id = Number(req.params.id);
+	let id = req.params.id;
+	if (!id) return next();
 
-	if (isNaN(id)) return res.json({ error: "The ID entered is not a number." });
-	else if (!Number.isInteger(id)) return res.json({ error: "The ID entered is not an integer." });
+	id = Number(req.params.id);
+	if (isNaN(id)) res.json({ error: "The ID entered is not a number." });
+	else if (!Number.isInteger(id)) res.json({ error: "The ID entered is not an integer." });
 	else {
 		next();
 	}
 }
 
-function productExists(req, res, next) {
-	const id = Number(req.params.id);
-	const product = products.find((product) => product.id === id);
-
-	if (!product) return res.json({ error: "product not found" });
-	else next();
+function isAdmin(req, res, next) {
+	if (admin) next();
+	else res.json({ error: "You haven't got administrator privileges." });
 }
 
 //ROUTES
 //------------- GET HANDLING --------------------------------------//
-router.get("/", productsAvailable, (req, res) => {
-	res.json(products);
-});
-
-router.get("/:id", productsAvailable, validateId, productExists, (req, res) => {
+router.get("/:id?", validateId, async (req, res) => {
 	const id = Number(req.params.id);
-	const product = products.find((product) => product.id === id);
 
-	res.json(product);
+	//SEND PRODUCT BY ID
+	if (id) {
+		try {
+			const product = await Products.getProductById(id);
+
+			if (product) res.json(product);
+			else res.json({ error: "There's no product with that id." });
+		} catch (error) {
+			res.json({ error: "Error while getting product.", description: error.message });
+		}
+
+		//SEND ALL PRODUCTS
+	} else {
+		try {
+			const products = await Products.getProducts();
+
+			if (products.length > 0) res.json(products);
+			else res.json({ error: "There aren't any products available." });
+		} catch (error) {
+			res.json({ error: "Error while getting products.", description: error.message });
+		}
+	}
 });
 
 //------------- POST HANDLING -------------------------------------//
-router.post("/", (req, res) => {
-	const newId = products.length > 0 ? products[products.length - 1].id + 1 : 1;
-	products.push({ ...req.body, id: newId });
+router.post("/", isAdmin, async (req, res) => {
+	const { name, description, code, imgURL, price, stock } = req.body;
 
-	res.json(products[products.length - 1]);
+	try {
+		const product = new Products(name, description, code, imgURL, price, stock);
+		await product.saveProduct();
+
+		res.json(product);
+	} catch (error) {
+		res.json({ error: "Error while creating product.", description: error.message });
+	}
 });
 
 //------------- PUT HANDLING --------------------------------------//
-router.put("/:id", productsAvailable, validateId, productExists, (req, res) => {
+router.put("/:id", isAdmin, validateId, async (req, res) => {
 	const id = Number(req.params.id);
-	const product = products.find((product) => product.id === id);
+	const { name, description, code, imgURL, price, stock } = req.body;
 
-	const { title, price, thumbnail } = req.body;
+	try {
+		const product = await Products.updateProduct(id, { name, description, code, imgURL, price, stock });
 
-	product.title = title ?? product.title;
-	product.price = price ?? product.price;
-	product.thumbnail = thumbnail ?? product.thumbnail;
-
-	res.json(product);
+		if (product) res.json(product);
+		else res.json({ error: "There's no product with that id." });
+	} catch (error) {
+		res.json({ error: "Error while updating product.", description: error.message });
+	}
 });
 
 //------------- DELETE HANDLING -----------------------------------//
-router.delete("/:id", productsAvailable, validateId, productExists, (req, res) => {
+router.delete("/:id", isAdmin, validateId, async (req, res) => {
 	const id = Number(req.params.id);
-	products = products.filter((product) => product.id !== id);
 
-	res.json({ id: id });
+	try {
+		const product = await Products.deleteProduct(id);
+
+		if (product) res.json(product);
+		else res.json({ error: "There's no product with that id." });
+	} catch (error) {
+		res.json({ error: "Error while deleting product.", description: error.message });
+	}
 });
 
 //EXPORTS
 exports.router = router;
+exports.admin = admin;

@@ -15,10 +15,12 @@ class Products {
 	static async getProducts() {
 		try {
 			const products = await fs.promises.readFile(Products.#filePath);
+
+			console.log("Products sent.");
 			return JSON.parse(products);
 		} catch (error) {
 			console.log(error.message);
-			return [];
+			throw error;
 		}
 	}
 
@@ -27,9 +29,16 @@ class Products {
 			const products = await Products.getProducts();
 			const product = products.find((product) => product.id === id);
 
-			return product || null;
+			if (product) {
+				console.log("Product found.");
+				return product;
+			} else {
+				console.log("There's no product with that id.");
+				return null;
+			}
 		} catch (error) {
 			console.log(error.message);
+			throw error;
 		}
 	}
 
@@ -48,27 +57,36 @@ class Products {
 
 				await fs.promises.writeFile(Products.#filePath, JSON.stringify(products));
 				console.log("Product updated.");
+				return updatedProduct;
 			} else {
 				console.log("There's no product with that id.");
+				return null;
 			}
 		} catch (error) {
 			console.log(error.message);
+			throw error;
 		}
 	}
 
 	static async deleteProduct(id) {
 		try {
 			let products = await Products.getProducts();
-			if (products.some((product) => product.id === id)) {
-				products = products.filter((product) => product.id !== id);
+			const product = products.find((product) => product.id === id);
+
+			if (product) {
+				products = products.filter((prod) => prod !== product);
 
 				await fs.promises.writeFile(Products.#filePath, JSON.stringify(products));
 				console.log("Product deleted.");
+
+				return product;
 			} else {
 				console.log("There's no product with that id.");
+				return null;
 			}
 		} catch (error) {
 			console.log(error.message);
+			throw error;
 		}
 	}
 
@@ -90,9 +108,10 @@ class Products {
 			await fs.promises.writeFile(Products.#filePath, JSON.stringify(products));
 			console.log("Product saved.");
 
-			return this.id;
+			return this;
 		} catch (error) {
 			console.log(error.message);
+			throw error;
 		}
 	}
 }
