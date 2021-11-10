@@ -76,11 +76,15 @@ class Products {
 		return products.length > 0 ? products[products.length - 1].id + 1 : 1;
 	}
 
+	async setLastProps(products) {
+		this.id = await this.getNewId(products || (await Products.getProducts()));
+		this.timestamp = Date.now();
+	}
+
 	async saveProduct() {
 		try {
 			const products = await Products.getProducts();
-			this.id = await this.getNewId(products);
-			this.timestamp = Date.now();
+			await this.setLastProps(products);
 			products.push(this);
 
 			await fs.promises.writeFile(Products.#filePath, JSON.stringify(products));
@@ -93,4 +97,4 @@ class Products {
 	}
 }
 
-module.exports = { Products };
+exports.Products = Products;
