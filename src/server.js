@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const { router: productsRouter } = require("./routers/apiProducts.js");
-// const { cartsRouter } = require("./routers/apiCarts.js");
+const { router: cartsRouter } = require("./routers/apiCarts.js");
 
 //MIDDLEWARES
 app.use(express.json());
@@ -10,7 +10,7 @@ app.use(express.json());
 //ROUTERS
 // app.use(express.static("./public"));
 app.use("/api/products", productsRouter);
-// app.use("/api/carts", cartsRouter);
+app.use("/api/carts", cartsRouter);
 
 //ROUTES
 app.all("*", (req, res) => {

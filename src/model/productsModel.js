@@ -15,8 +15,8 @@ class Products {
 	static async getProducts() {
 		try {
 			const products = await fs.promises.readFile(Products.#filePath);
-
 			console.log("Products sent.");
+
 			return JSON.parse(products);
 		} catch (error) {
 			console.log(error.message);

@@ -4,22 +4,7 @@ const { Products } = require("../model/productsModel");
 let admin = true;
 
 //MIDDLEWARES
-function validateId(req, res, next) {
-	let id = req.params.id;
-	if (!id) return next();
-
-	id = Number(req.params.id);
-	if (isNaN(id)) res.json({ error: "The ID entered is not a number." });
-	else if (!Number.isInteger(id)) res.json({ error: "The ID entered is not an integer." });
-	else {
-		next();
-	}
-}
-
-function isAdmin(req, res, next) {
-	if (admin) next();
-	else res.json({ error: "You haven't got administrator privileges." });
-}
+const { validateId, isAdmin } = require("./middlewares");
 
 //ROUTES
 //------------- GET HANDLING --------------------------------------//
