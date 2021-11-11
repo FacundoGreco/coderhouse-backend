@@ -17,9 +17,9 @@ router.get("/:id?", validateId, async (req, res) => {
 			const product = await Products.getProductById(id);
 
 			if (product) res.json(product);
-			else res.json({ error: "There's no product with that id." });
+			else res.status(404).json({ error: "There's no product with that id." });
 		} catch (error) {
-			res.json({ error: "Error while getting product.", description: error.message });
+			res.status(500).json({ error: "Error while getting product.", description: error.message });
 		}
 
 		//SEND ALL PRODUCTS
@@ -28,9 +28,9 @@ router.get("/:id?", validateId, async (req, res) => {
 			const products = await Products.getProducts();
 
 			if (products.length > 0) res.json(products);
-			else res.json({ error: "There aren't any products available." });
+			else res.status(404).json({ error: "There aren't any products available." });
 		} catch (error) {
-			res.json({ error: "Error while getting products.", description: error.message });
+			res.status(500).json({ error: "Error while getting products.", description: error.message });
 		}
 	}
 });
@@ -45,7 +45,7 @@ router.post("/", isAdmin, async (req, res) => {
 
 		res.json(product);
 	} catch (error) {
-		res.json({ error: "Error while creating product.", description: error.message });
+		res.status(500).json({ error: "Error while creating product.", description: error.message });
 	}
 });
 
@@ -58,9 +58,9 @@ router.put("/:id", isAdmin, validateId, async (req, res) => {
 		const product = await Products.updateProduct(id, { name, description, code, imgURL, price, stock });
 
 		if (product) res.json(product);
-		else res.json({ error: "There's no product with that id." });
+		else res.status(404).json({ error: "There's no product with that id." });
 	} catch (error) {
-		res.json({ error: "Error while updating product.", description: error.message });
+		res.status(500).json({ error: "Error while updating product.", description: error.message });
 	}
 });
 
@@ -72,9 +72,9 @@ router.delete("/:id", isAdmin, validateId, async (req, res) => {
 		const product = await Products.deleteProduct(id);
 
 		if (product) res.json(product);
-		else res.json({ error: "There's no product with that id." });
+		else res.status(404).json({ error: "There's no product with that id." });
 	} catch (error) {
-		res.json({ error: "Error while deleting product.", description: error.message });
+		res.status(500).json({ error: "Error while deleting product.", description: error.message });
 	}
 });
 
