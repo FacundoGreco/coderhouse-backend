@@ -1,3 +1,11 @@
+//FUNCTIONS
+function addEventListenerByQuery(query, event, fn) {
+	let list = document.querySelectorAll(query);
+	for (let i = 0, len = list.length; i < len; i++) {
+		list[i].addEventListener(event, fn, false);
+	}
+}
+
 //ADD PRODUCTS
 const addProducts = document.querySelector(".addProducts");
 
@@ -21,3 +29,15 @@ async function addProduct(e) {
 }
 
 addProducts.addEventListener("submit", addProduct);
+
+//PRODUCTS LIST
+async function deleteProduct(e) {
+	const productCard = e.target.parentNode.parentNode;
+	const id = productCard.querySelector(".productId").textContent.replace("ID: ", "");
+
+	const response = await fetch(`api/products/${id}`, { method: "DELETE" });
+
+	console.log(response);
+}
+
+addEventListenerByQuery(".deleteProductBtn", "click", deleteProduct);
