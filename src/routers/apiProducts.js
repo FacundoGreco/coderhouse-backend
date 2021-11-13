@@ -1,7 +1,6 @@
 const { Router } = require("express");
 const router = new Router();
 const { Products } = require("../model/productsModel");
-let admin = true;
 
 //MIDDLEWARES
 const { validateId, isAdmin } = require("./middlewares");
@@ -80,4 +79,3 @@ router.delete("/:id", isAdmin, validateId, async (req, res) => {
 
 //EXPORTS
 exports.router = router;
-exports.admin = admin;

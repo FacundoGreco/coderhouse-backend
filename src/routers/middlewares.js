@@ -1,4 +1,4 @@
-const { admin } = require("./apiProducts.js");
+let admin = true;
 
 //MIDDLEWARES
 function validateId(req, res, next) {
