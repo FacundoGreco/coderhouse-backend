@@ -1,0 +1,21 @@
+<div class="productsList d-flex flex-column align-items-center mt-4 bg-dark text-white">
+	<h2 class="mt-3">Products List</h2>
+	<div class="list row row-cols-1 row-cols-md-2 row-cols-xxl-4 w-100 px-4 py-2">
+		<% products.map(product => { %> <%const {name, description, code, imgURL, price, stock } = product %>
+		<div class="col my-2 d-flex justify-content-center">
+			<div class="productCard card bg-light text-dark p-2">
+				<img class="card-img-top" src="<%= imgURL %>" alt="Product Image" />
+				<h3 class="card-title"><%= name%></h3>
+				<p card-text><%= description%></p>
+				<p><strong>Code: </strong><%= code%></p>
+				<p><strong>Price: </strong><%= price%></p>
+				<p><strong>Stock: </strong><%= stock%></p>
+				<div class="cardButtons d-flex justify-content-around">
+					<button class="btn btn-primary w-50 mx-1">Edit</button>
+					<button class="btn btn-danger w-50 mx-1">Delete</button>
+				</div>
+			</div>
+		</div>
+		<% }); %>
+	</div>
+</div>
