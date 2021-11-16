@@ -1,9 +1,9 @@
 const express = require("express");
 const app = express();
-const { router: productsRouter } = require("./productsApi.js");
-const { router: chatRouter, getMessages } = require("./chatApi.js");
+const { router: productsRouter } = require("./routers/productsApi.js");
+const { router: chatRouter, getMessages } = require("./routers/chatApi.js");
 
-let { products } = require("./productsApi");
+let { products } = require("./routers/productsApi");
 
 //MIDDLEWARES
 app.set("view engine", "ejs");

@@ -40,7 +40,7 @@ router.post("/", validateMessage, async (req, res) => {
 		try {
 			await fs.promises.writeFile("./src/db/messages.json", JSON.stringify(messages));
 
-			const { io } = require("./server");
+			const { io } = require("../server");
 			io.sockets.emit("loadMessages", messages);
 
 			res.send(newMessage);

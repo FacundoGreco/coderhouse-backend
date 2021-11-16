@@ -51,7 +51,7 @@ router.post("/", validateProduct, (req, res) => {
 	const newProduct = { ...req.body, id: newId };
 	products.push(newProduct);
 
-	const { io } = require("./server");
+	const { io } = require("../server");
 	io.sockets.emit("loadProducts", products);
 
 	res.send(newProduct);
@@ -68,7 +68,7 @@ router.put("/:id", productsAvailable, validateId, productExists, (req, res) => {
 	product.price = price ?? product.price;
 	product.imageUrl = imageUrl ?? product.imageUrl;
 
-	const { io } = require("./server");
+	const { io } = require("../server");
 	io.sockets.emit("loadProducts", products);
 
 	res.json(product);
@@ -79,7 +79,7 @@ router.delete("/:id", productsAvailable, validateId, productExists, (req, res) =
 	const id = Number(req.params.id);
 	products = products.filter((product) => product.id !== id);
 
-	const { io } = require("./server");
+	const { io } = require("../server");
 	io.sockets.emit("loadProducts", products);
 
 	res.json({ id: id });
