@@ -32,7 +32,7 @@ class Container {
 		try {
 			const rows = await this.knex.from(this.table).select("*");
 
-			return rows.length > 0 ? rows : false;
+			return rows;
 		} catch (error) {
 			console.log(error.message);
 			throw error;

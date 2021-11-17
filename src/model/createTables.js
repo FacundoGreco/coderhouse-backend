@@ -40,6 +40,7 @@ async function createTables() {
 				await knex.schema.createTable("messages", (table) => {
 					table.increments("id");
 					table.string("email");
+					table.string("date");
 					table.string("message");
 				});
 

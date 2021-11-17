@@ -1,6 +1,10 @@
-const fs = require("fs");
 const { Router } = require("express");
 const router = new Router();
+
+//MODEL
+const Container = require("../model/Container");
+const { options } = require("../db/options/mysql");
+const model = new Container(options, "messages");
 
 //MIDDLEWARES
 function validateMessage(req, res, next) {
@@ -10,48 +14,40 @@ function validateMessage(req, res, next) {
 }
 
 //HELPER FUNCTIONS
-async function getMessages() {
-	let messages = null;
+async function emitLoadMessages() {
 	try {
-		messages = await fs.promises.readFile("./src/db/messages.json");
-		messages = JSON.parse(messages);
-	} catch (err) {
-		console.log(err);
+		const messages = await model.getElementsAll();
+
+		const { io } = require("../server");
+		io.sockets.emit("loadMessages", messages);
+	} catch (error) {
+		console.log(error.message);
 	}
-	return messages;
 }
 
 //ROUTES
 //------------- GET HANDLING --------------------------------------//
 router.get("/", async (req, res) => {
-	const messages = await getMessages();
+	try {
+		const messages = await model.getElementsAll();
 
-	res.json(messages);
+		res.json(messages);
+	} catch (error) {
+		res.status(500).json({ error: "Error while getting messages.", description: error.message });
+	}
 });
 
 //------------- POST HANDLING -------------------------------------//
 router.post("/", validateMessage, async (req, res) => {
-	const messages = await getMessages();
+	try {
+		const newMessage = await model.insertElement(req.body);
 
-	if (messages != null) {
-		const newMessage = { ...req.body };
-		messages.push(newMessage);
+		res.json(newMessage);
 
-		try {
-			await fs.promises.writeFile("./src/db/messages.json", JSON.stringify(messages));
-
-			const { io } = require("../server");
-			io.sockets.emit("loadMessages", messages);
-
-			res.send(newMessage);
-		} catch (error) {
-			console.log(error);
-			res.send("No se pudo cargar el mensaje.");
-		}
-	} else {
-		res.send("No se pudo enviar el mensaje.");
+		await emitLoadMessages();
+	} catch (error) {
+		res.status(500).json({ error: "Error while inserting new message.", description: error.message });
 	}
 });
 
 exports.router = router;
-exports.getMessages = getMessages;
