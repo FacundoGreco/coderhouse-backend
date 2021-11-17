@@ -3,7 +3,14 @@ const app = express();
 const { router: productsRouter } = require("./routers/productsApi.js");
 const { router: chatRouter, getMessages } = require("./routers/chatApi.js");
 
-let { products } = require("./routers/productsApi");
+//MODELS
+const Container = require("./model/Container");
+
+const { options: sqlite3Options } = require("./db/options/sqlite3");
+const sqlite3Model = new Container(sqlite3Options, "products");
+
+// const { options: mysqlOptions } = require("./db/options/mysql");
+// const mysqlModel = new Container(mysqlOptions, "messages");
 
 //MIDDLEWARES
 app.set("view engine", "ejs");
@@ -37,6 +44,9 @@ const io = new IOServer(server);
 
 io.on("connection", async (socket) => {
 	console.log("User connected...");
+
+	//Fetch products
+	const products = await sqlite3Model.getElementsAll();
 
 	//Fetch messages
 	const messages = await getMessages();
