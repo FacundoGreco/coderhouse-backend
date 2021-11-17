@@ -26,7 +26,10 @@ socket.on("loadProducts", async (products) => {
 
 //ON LOAD MESSAGES
 socket.on("loadMessages", async (messages) => {
-	sendButton.disabled = !messages ? true : false;
+	if (!messages) {
+		emailInput.disabled = true;
+		sendButton.disabled = true;
+	}
 
 	//Removes old chat
 	let oldChat = messageCenter.querySelector(".chat");
@@ -80,7 +83,13 @@ form.addEventListener("submit", async (e) => {
 
 //ON CHANGE EMAIL
 emailInput.addEventListener("change", (e) => {
-	messageInput.disabled = emailInput.value != "" ? false : true;
+	if (emailInput.value != "") {
+		messageInput.disabled = false;
+		sendButton.disabled = false;
+	} else {
+		messageInput.disabled = true;
+		sendButton.disabled = true;
+	}
 });
 
 //GET FORMATTED DATE
