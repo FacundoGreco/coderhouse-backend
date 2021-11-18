@@ -1,0 +1,17 @@
+<div class="cartItemsList d-flex flex-column w-75">
+	<h3>Items List</h3>
+	<div class="list">
+		<% if(cartProducts.length > 0) {%> <%cartProducts.map(product => {%>
+		<li class="d-flex justify-content-between align-items-center mx-3">
+			<p class="fs-5"><%= product.name %></p>
+			<button class="removeItem btn btn-light">X</button>
+		</li>
+		<% });%> <%} else {%>
+
+		<h3 class="text-start mx-3">Cart empty...</h3>
+
+		<%} %>
+	</div>
+
+	<button type="reset" class="btn btn-light justify-self-end">Empty Cart</button>
+</div>

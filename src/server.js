@@ -18,7 +18,7 @@ app.use("/api/carts", cartsRouter);
 //ROUTES
 app.get("/", async (req, res) => {
 	const products = await Products.getProducts();
-	res.render("pages/index", { products: products });
+	res.render("pages/index", { products: products, cartProducts: [] });
 });
 
 app.all("*", (req, res) => {

@@ -1,0 +1,22 @@
+<div class="cart mt-4 m-auto p-3 bg-dark text-white w-75 text-center">
+	<h2 class="mb-3">Cart</h2>
+	<div class="itemsSection d-flex">
+		<div class="addItem text-start d-flex flex-column align-items-center w-25 border-end border-white">
+			<h3>Add Item</h3>
+			<div class="form-group w-75 mt-3">
+				<label for="prodID">Product ID</label>
+				<input
+					class="form-control"
+					type="text"
+					name="prodID"
+					id="prodID"
+					placeholder="Product ID..."
+					required
+				/>
+			</div>
+
+			<button class="btn w-75 px-3 mt-4 btn-primary" type="submit">Add</button>
+		</div>
+		<%- include("../../../public/partials/CartItemsList") %>
+	</div>
+</div>
