@@ -95,3 +95,66 @@ async function editProduct(e) {
 
 addEventListenerByQuery(".deleteProductBtn", "click", deleteProduct);
 addEventListenerByQuery(".editProductBtn", "click", editProduct);
+
+//CART
+const itemsSection = document.querySelector(".itemsSection");
+let cartID;
+
+async function getCartProducts(id) {
+	try {
+		const cartProducts = await fetch(`api/carts/${id}/products`, { method: "GET" });
+
+		return await cartProducts.json();
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
+
+async function loadCart() {
+	cartID = JSON.parse(localStorage.getItem("cartID"));
+
+	if (cartID) {
+		try {
+			const cartProducts = await getCartProducts(cartID);
+
+			//Removes old CartItemsList node
+			const oldCartItemsList = itemsSection.querySelector(".cartItemsList");
+			itemsSection.removeChild(oldCartItemsList);
+
+			//Fetches CartItemsList and compiles it
+			const CartItemsListFile = await fetch("/partials/CartItemsList.ejs");
+			const CartItemsListEjs = await CartItemsListFile.text();
+
+			//Renders cartItemsList
+			const CartItemsList = ejs.render(CartItemsListEjs, { cartProducts: cartProducts });
+			itemsSection.innerHTML += CartItemsList;
+
+			//Adds delete item listener
+
+			// const saveProductChangesBtn = productCard.querySelector(".saveProductChangesBtn");
+			// saveProductChangesBtn.addEventListener("click", saveProductChanges);
+		} catch (error) {
+			console.log("Error while getting cart products.");
+		}
+	} else {
+		try {
+			const response = await fetch("api/carts", {
+				method: "POST",
+				mode: "cors",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+
+			const cart = await response.json();
+
+			localStorage.setItem("cartID", cart.id);
+		} catch (error) {
+			console.log(error);
+			console.log("Error while creating new cart.");
+		}
+	}
+}
+
+(async () => await loadCart())();
