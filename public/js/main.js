@@ -129,10 +129,8 @@ async function loadCart() {
 			const CartItemsList = ejs.render(CartItemsListEjs, { cartProducts: cartProducts });
 			itemsSection.innerHTML += CartItemsList;
 
-			//Adds delete item listener
-
-			// const saveProductChangesBtn = productCard.querySelector(".saveProductChangesBtn");
-			// saveProductChangesBtn.addEventListener("click", saveProductChanges);
+			//Adds remove item listener
+			addEventListenerByQuery(".removeItem", "click", removeItem);
 		} catch (error) {
 			console.log("Error while getting cart products.");
 		}
@@ -181,6 +179,17 @@ async function addItem(e) {
 		});
 	} catch (error) {
 		console.log(error);
+		console.log("Error while adding item.");
+	}
+}
+
+async function removeItem(e) {
+	const prodID = e.target.parentNode.querySelector(".prodID").innerHTML.replace("ID: ", "");
+	try {
+		await fetch(`api/carts/${cartID}/products/${prodID}`, { method: "DELETE" });
+	} catch (error) {
+		console.log(error);
+		console.log("Error while removing item.");
 	}
 }
 
@@ -191,5 +200,6 @@ async function cleanCart(e) {
 		localStorage.removeItem("cartID");
 	} catch (error) {
 		console.log(error);
+		console.log("Error while cleaning cart.");
 	}
 }
