@@ -117,7 +117,6 @@ async function loadCart() {
 	if (cartID) {
 		try {
 			const cartProducts = await getCartProducts(cartID);
-
 			//Removes old CartItemsList node
 			const oldCartItemsList = itemsSection.querySelector(".cartItemsList");
 			itemsSection.removeChild(oldCartItemsList);
@@ -155,6 +154,27 @@ async function loadCart() {
 			console.log("Error while creating new cart.");
 		}
 	}
-}
 
+	//Adds add item listener
+	const addItemBtn = itemsSection.querySelector(".addItemBtn");
+	addItemBtn.addEventListener("click", addItem);
+}
 (async () => await loadCart())();
+
+async function addItem(e) {
+	const prodID = e.target.parentNode.querySelector("#prodID").value;
+
+	if (prodID === "") return;
+
+	try {
+		await fetch(`api/carts/${cartID}/products/${prodID}`, {
+			method: "POST",
+			mode: "cors",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+	} catch (error) {
+		console.log(error);
+	}
+}
