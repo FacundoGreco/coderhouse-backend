@@ -148,6 +148,7 @@ async function loadCart() {
 
 			const cart = await response.json();
 
+			cartID = cart.id;
 			localStorage.setItem("cartID", cart.id);
 		} catch (error) {
 			console.log(error);
@@ -158,6 +159,10 @@ async function loadCart() {
 	//Adds add item listener
 	const addItemBtn = itemsSection.querySelector(".addItemBtn");
 	addItemBtn.addEventListener("click", addItem);
+
+	//Adds clean cart listener
+	const cleanCartBtn = itemsSection.querySelector(".cleanCartBtn");
+	cleanCartBtn.addEventListener("click", cleanCart);
 }
 (async () => await loadCart())();
 
@@ -174,6 +179,16 @@ async function addItem(e) {
 				"Content-Type": "application/json",
 			},
 		});
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+async function cleanCart(e) {
+	try {
+		await fetch(`api/carts/${cartID}`, { method: "DELETE" });
+
+		localStorage.removeItem("cartID");
 	} catch (error) {
 		console.log(error);
 	}
