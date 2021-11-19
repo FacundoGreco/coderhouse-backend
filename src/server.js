@@ -17,8 +17,7 @@ app.use("/api/carts", cartsRouter);
 
 //ROUTES
 app.get("/", async (req, res) => {
-	const products = await Products.getProducts();
-	res.render("pages/index", { products: products, cartProducts: [] });
+	res.render("pages/index", { products: [], cartProducts: [] });
 });
 
 app.all("*", (req, res) => {
@@ -33,3 +32,17 @@ const server = app.listen(PORT, () => {
 });
 
 server.on("error", (err) => console.log(`Error in server: ${err}`));
+
+//WEBSOCKETS
+const { Server: IOServer } = require("socket.io");
+const io = new IOServer(server);
+
+io.on("connection", async (socket) => {
+	console.log("User connected...");
+
+	//Fetch products
+	const products = await Products.getProducts();
+	socket.emit("loadProducts", products);
+});
+
+exports.io = io;

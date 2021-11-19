@@ -28,7 +28,7 @@
 			crossorigin="anonymous"
 		></script>
 		<script src="/js/ejs.min.js"></script>
-
+		<script src="/socket.io/socket.io.js"></script>
 		<script defer src="/js/main.js"></script>
 	</head>
 	<body>
@@ -36,7 +36,7 @@
 
 		<div class="addProductsSection"><%- include("../partials/AddProducts") %></div>
 
-		<div class="productsListSection"><%- include("../partials/ProductsList") %></div>
+		<div class="productsListSection"><%- include("../partials/ProductsListContainer") %></div>
 
 		<div class="mb-4 cartSection"><%- include("../partials/Cart") %></div>
 	</body>

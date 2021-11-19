@@ -1,3 +1,5 @@
+const socket = io();
+
 //FUNCTIONS
 function addEventListenerByQuery(query, event, fn) {
 	let list = document.querySelectorAll(query);
@@ -31,6 +33,30 @@ async function addProduct(e) {
 addProducts.addEventListener("submit", addProduct);
 
 //PRODUCTS LIST
+const productsListContainer = document.querySelector(".productsListContainer");
+
+socket.on("loadProducts", async (products) => {
+	try {
+		//Removes old ProductsList node
+		const oldProductsList = productsListContainer.querySelector(".productsList");
+		productsListContainer.removeChild(oldProductsList);
+
+		//Fetches ProductsList and compiles it
+		const ProductsListFile = await fetch("/partials/ProductsList.ejs");
+		const ProductsListEjs = await ProductsListFile.text();
+
+		//Renders ProductsList
+		const ProductsList = ejs.render(ProductsListEjs, { products: products });
+		productsListContainer.innerHTML += ProductsList;
+
+		//Adds buttons listeners
+		addEventListenerByQuery(".deleteProductBtn", "click", deleteProduct);
+		addEventListenerByQuery(".editProductBtn", "click", editProduct);
+	} catch (error) {
+		console.log("Error while loading products list.");
+	}
+});
+
 function getProductId(e) {
 	const productCard = e.target.parentNode.parentNode;
 	const id = productCard.querySelector(".productId").textContent.replace("ID: ", "");
@@ -41,9 +67,7 @@ function getProductId(e) {
 async function deleteProduct(e) {
 	const id = getProductId(e);
 
-	const response = await fetch(`api/products/${id}`, { method: "DELETE" });
-
-	console.log(response);
+	await fetch(`api/products/${id}`, { method: "DELETE" });
 }
 
 async function saveProductChanges(e) {
@@ -55,7 +79,7 @@ async function saveProductChanges(e) {
 	const editProductModal = e.target.parentNode.parentNode;
 	editProductModal.querySelectorAll(".form-group input").forEach((input) => (product[input.id] = input.value));
 
-	const response = await fetch(`api/products/${id}`, {
+	await fetch(`api/products/${id}`, {
 		method: "PUT",
 		mode: "cors",
 		headers: {
@@ -63,8 +87,6 @@ async function saveProductChanges(e) {
 		},
 		body: JSON.stringify(product),
 	});
-
-	console.log(response);
 }
 
 async function editProduct(e) {
@@ -92,9 +114,6 @@ async function editProduct(e) {
 	const saveProductChangesBtn = productCard.querySelector(".saveProductChangesBtn");
 	saveProductChangesBtn.addEventListener("click", saveProductChanges);
 }
-
-addEventListenerByQuery(".deleteProductBtn", "click", deleteProduct);
-addEventListenerByQuery(".editProductBtn", "click", editProduct);
 
 //CART
 const itemsSection = document.querySelector(".itemsSection");
@@ -148,6 +167,8 @@ async function loadCart() {
 
 			cartID = cart.id;
 			localStorage.setItem("cartID", cart.id);
+
+			await loadCart();
 		} catch (error) {
 			console.log(error);
 			console.log("Error while creating new cart.");
@@ -177,6 +198,8 @@ async function addItem(e) {
 				"Content-Type": "application/json",
 			},
 		});
+
+		await loadCart();
 	} catch (error) {
 		console.log(error);
 		console.log("Error while adding item.");
@@ -187,6 +210,7 @@ async function removeItem(e) {
 	const prodID = e.target.parentNode.querySelector(".prodID").innerHTML.replace("ID: ", "");
 	try {
 		await fetch(`api/carts/${cartID}/products/${prodID}`, { method: "DELETE" });
+		await loadCart();
 	} catch (error) {
 		console.log(error);
 		console.log("Error while removing item.");
@@ -195,9 +219,9 @@ async function removeItem(e) {
 
 async function cleanCart(e) {
 	try {
-		await fetch(`api/carts/${cartID}`, { method: "DELETE" });
-
 		localStorage.removeItem("cartID");
+		await fetch(`api/carts/${cartID}`, { method: "DELETE" });
+		await loadCart();
 	} catch (error) {
 		console.log(error);
 		console.log("Error while cleaning cart.");

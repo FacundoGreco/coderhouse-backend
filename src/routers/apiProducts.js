@@ -5,6 +5,18 @@ const { Products } = require("../model/productsModel");
 //MIDDLEWARES
 const { validateId, isAdmin } = require("./middlewares");
 
+//HELPER FUNCTIONS
+async function emitLoadProducts() {
+	try {
+		const products = await Products.getProducts();
+
+		const { io } = require("../server");
+		io.sockets.emit("loadProducts", products);
+	} catch (error) {
+		console.log(error.message);
+	}
+}
+
 //ROUTES
 //------------- GET HANDLING --------------------------------------//
 router.get("/:id?", validateId, async (req, res) => {
@@ -46,6 +58,8 @@ router.post("/", isAdmin, async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ error: "Error while creating product.", description: error.message });
 	}
+
+	await emitLoadProducts();
 });
 
 //------------- PUT HANDLING --------------------------------------//
@@ -61,6 +75,8 @@ router.put("/:id", isAdmin, validateId, async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ error: "Error while updating product.", description: error.message });
 	}
+
+	await emitLoadProducts();
 });
 
 //------------- DELETE HANDLING -----------------------------------//
@@ -75,6 +91,8 @@ router.delete("/:id", isAdmin, validateId, async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ error: "Error while deleting product.", description: error.message });
 	}
+
+	await emitLoadProducts();
 });
 
 //EXPORTS
