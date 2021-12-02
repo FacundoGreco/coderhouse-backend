@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from "fs";
 
 class Products {
 	static #filePath = "src/db/products.json";
@@ -116,4 +116,4 @@ class Products {
 	}
 }
 
-exports.Products = Products;
+export { Products };

@@ -1,16 +1,16 @@
-const { Router } = require("express");
+import { Router } from "express";
 const router = new Router();
-const { Products } = require("../model/productsModel");
+import { Products } from "../model/productsModel.js";
 
 //MIDDLEWARES
-const { validateId, isAdmin } = require("./middlewares");
+import { validateId, isAdmin } from "./middlewares.js";
 
 //HELPER FUNCTIONS
 async function emitLoadProducts() {
 	try {
 		const products = await Products.getProducts();
 
-		const { io } = require("../server");
+		const { io } = await import("../server.js");
 		io.sockets.emit("loadProducts", products);
 	} catch (error) {
 		console.log(error.message);
@@ -96,4 +96,4 @@ router.delete("/:id", isAdmin, validateId, async (req, res) => {
 });
 
 //EXPORTS
-exports.router = router;
+export { router };

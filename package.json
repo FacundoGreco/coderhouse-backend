@@ -1,12 +1,8 @@
 {
-	"dependencies": {
-		"ejs": "^3.1.6",
-		"express": "^4.17.1",
-		"socket.io": "^4.4.0"
-	},
 	"name": "coderhouse-backend",
 	"version": "1.0.0",
 	"main": "./src/server.js",
+	"type": "module",
 	"scripts": {
 		"start": "node src/server",
 		"test": "echo \"Error: no test specified\" && exit 1"
@@ -21,5 +17,10 @@
 	"bugs": {
 		"url": "https://github.com/FacundoGreco/coderhouse-backend/issues"
 	},
-	"homepage": "https://github.com/FacundoGreco/coderhouse-backend#readme"
+	"homepage": "https://github.com/FacundoGreco/coderhouse-backend#readme",
+	"dependencies": {
+		"ejs": "^3.1.6",
+		"express": "^4.17.1",
+		"socket.io": "^4.4.0"
+	}
 }

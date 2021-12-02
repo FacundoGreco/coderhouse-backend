@@ -29,6 +29,4 @@ function isAdmin(req, res, next) {
 	else res.status(403).json({ error: "You haven't got administrator privileges." });
 }
 
-exports.validateId = validateId;
-exports.validateIdProd = validateIdProd;
-exports.isAdmin = isAdmin;
+export { validateId, validateIdProd, isAdmin };

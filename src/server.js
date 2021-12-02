@@ -1,9 +1,12 @@
-const express = require("express");
+import express from "express";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+import { router as productsRouter } from "./routers/apiProducts.js";
+import { router as cartsRouter } from "./routers/apiCarts.js";
+import { Products } from "./model/productsModel.js";
+
 const app = express();
-const path = require("path");
-const { router: productsRouter } = require("./routers/apiProducts.js");
-const { router: cartsRouter } = require("./routers/apiCarts.js");
-const { Products } = require("./model/productsModel.js");
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 //MIDDLEWARES
 app.use(express.json());
@@ -34,7 +37,7 @@ const server = app.listen(PORT, () => {
 server.on("error", (err) => console.log(`Error in server: ${err}`));
 
 //WEBSOCKETS
-const { Server: IOServer } = require("socket.io");
+import { Server as IOServer } from "socket.io";
 const io = new IOServer(server);
 
 io.on("connection", async (socket) => {
@@ -45,4 +48,4 @@ io.on("connection", async (socket) => {
 	socket.emit("loadProducts", products);
 });
 
-exports.io = io;
+export { io };

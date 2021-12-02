@@ -1,10 +1,10 @@
-const { Router } = require("express");
+import { Router } from "express";
 const router = new Router();
-const { Carts } = require("../model/cartsModel");
-const { Products } = require("../model/productsModel");
+import { Carts } from "../model/cartsModel.js";
+import { Products } from "../model/productsModel.js";
 
 //MIDDLEWARES
-const { validateId, validateIdProd } = require("./middlewares.js");
+import { validateId, validateIdProd } from "./middlewares.js";
 
 //ROUTES
 //------------- GET HANDLING --------------------------------------//
@@ -87,4 +87,4 @@ router.delete("/:id/products/:idProd", validateId, validateIdProd, async (req, r
 });
 
 //EXPORTS
-exports.router = router;
+export { router };
