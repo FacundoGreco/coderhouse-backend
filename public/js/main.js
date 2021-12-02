@@ -132,10 +132,10 @@ async function getCartProducts(id) {
 
 async function loadCart() {
 	cartID = JSON.parse(localStorage.getItem("cartID"));
+	const cartProducts = await getCartProducts(cartID);
 
-	if (cartID) {
+	if (!cartProducts.error) {
 		try {
-			const cartProducts = await getCartProducts(cartID);
 			//Removes old CartItemsList node
 			const oldCartItemsList = itemsSection.querySelector(".cartItemsList");
 			itemsSection.removeChild(oldCartItemsList);
