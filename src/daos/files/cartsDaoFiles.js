@@ -1,9 +1,9 @@
 import Carts from "../../model/files/cartsModelFiles.js";
 
-class CartsDao extends Carts {
+class CartsDaoFiles extends Carts {
 	constructor() {
 		super();
 	}
 }
 
-export default CartsDao;
+export default CartsDaoFiles;

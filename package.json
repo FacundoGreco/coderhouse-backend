@@ -6,7 +6,8 @@
 	"scripts": {
 		"start": "npm run start-dev",
 		"start-dev": "set STORAGE=files&& node src/server.js",
-		"start-dev-memory": "set STORAGE=memory&& node src/server.js"
+		"start-dev-memory": "set STORAGE=memory&& node src/server.js",
+		"start-production": "set STORAGE=mongoDB&& node src/server.js"
 	},
 	"author": "Facundo Greco",
 	"license": "ISC",

@@ -1,9 +1,9 @@
 import Carts from "../../model/memory/cartsModelMemory.js";
 
-class CartsDao extends Carts {
+class CartsDaoMemory extends Carts {
 	constructor() {
 		super();
 	}
 }
 
-export default CartsDao;
+export default CartsDaoMemory;
