@@ -2,7 +2,6 @@ import fs from "fs";
 let carts = [];
 
 class Carts {
-	static #filePath = "src/db/carts.json";
 
 	constructor() {
 		this.products = [];

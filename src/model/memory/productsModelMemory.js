@@ -2,8 +2,6 @@ import fs from "fs";
 let products = [];
 
 class Products {
-	static #filePath = "src/db/products.json";
-
 	constructor(name, description, code, imgURL, price, stock) {
 		this.name = name;
 		this.description = description;
