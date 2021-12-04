@@ -125,16 +125,17 @@ async function getCartProducts(id) {
 
 		return await cartProducts.json();
 	} catch (error) {
-		console.log(error);
-		throw error;
+		console.log(error.message);
 	}
 }
 
 async function loadCart() {
 	cartID = JSON.parse(localStorage.getItem("cartID"));
-	const cartProducts = await getCartProducts(cartID);
+	let cartProducts;
 
-	if (!cartProducts.error) {
+	if (cartID) cartProducts = await getCartProducts(cartID);
+
+	if (cartID && !cartProducts.error) {
 		try {
 			//Removes old CartItemsList node
 			const oldCartItemsList = itemsSection.querySelector(".cartItemsList");

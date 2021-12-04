@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = new Router();
-import { Carts } from "../model/cartsModel.js";
-import { Products } from "../model/productsModel.js";
+import { CartsDao } from "../daos/daosExporter.js";
+import { ProductsDao } from "../daos/daosExporter.js";
 
 //MIDDLEWARES
 import { validateId, validateIdProd } from "./middlewares.js";
@@ -12,7 +12,7 @@ router.get("/:id/products", validateId, async (req, res) => {
 	const id = Number(req.params.id);
 
 	try {
-		const cartProducts = await Carts.getCartProducts(id);
+		const cartProducts = await CartsDao.getCartProducts(id);
 
 		if (cartProducts) res.json(cartProducts);
 		else res.status(404).json({ error: "There's no cart with that id." });
@@ -24,7 +24,7 @@ router.get("/:id/products", validateId, async (req, res) => {
 //------------- POST HANDLING -------------------------------------//
 router.post("/", async (req, res) => {
 	try {
-		const cart = new Carts();
+		const cart = new CartsDao();
 		await cart.saveCart();
 
 		res.json(cart);
@@ -38,10 +38,10 @@ router.post("/:id/products/:idProd", validateId, validateIdProd, async (req, res
 	const idProd = Number(req.params.idProd);
 
 	try {
-		const product = await Products.getProductById(idProd);
+		const product = await ProductsDao.getProductById(idProd);
 
 		if (product) {
-			const response = await Carts.addProduct(id, product);
+			const response = await CartsDao.addProduct(id, product);
 
 			if (response) res.json(response);
 			else res.status(404).json({ error: "There's no cart with that id." });
@@ -58,7 +58,7 @@ router.delete("/:id", validateId, async (req, res) => {
 	const id = Number(req.params.id);
 
 	try {
-		const cart = await Carts.deleteCart(id);
+		const cart = await CartsDao.deleteCart(id);
 
 		if (cart) res.json(cart);
 		else res.status(404).json({ error: "There's no cart with that id." });
@@ -72,7 +72,7 @@ router.delete("/:id/products/:idProd", validateId, validateIdProd, async (req, r
 	const idProd = Number(req.params.idProd);
 
 	try {
-		const { cart, product } = await Carts.deleteProduct(id, idProd);
+		const { cart, product } = await CartsDao.deleteProduct(id, idProd);
 
 		if (cart && product) {
 			res.json(product);

@@ -3,7 +3,7 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import { router as productsRouter } from "./routers/apiProducts.js";
 import { router as cartsRouter } from "./routers/apiCarts.js";
-import { Products } from "./model/productsModel.js";
+import { ProductsDao } from "./daos/daosExporter.js";
 
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -44,7 +44,7 @@ io.on("connection", async (socket) => {
 	console.log("User connected...");
 
 	//Fetch products
-	const products = await Products.getProducts();
+	const products = await ProductsDao.getProducts();
 	socket.emit("loadProducts", products);
 });
 

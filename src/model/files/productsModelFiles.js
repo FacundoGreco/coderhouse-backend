@@ -116,4 +116,4 @@ class Products {
 	}
 }
 
-export { Products };
+export default Products;

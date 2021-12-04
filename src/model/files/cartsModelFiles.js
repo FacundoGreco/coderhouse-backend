@@ -162,4 +162,4 @@ class Carts {
 	}
 }
 
-export { Carts };
+export default Carts;
