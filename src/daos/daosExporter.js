@@ -24,10 +24,12 @@ switch (config.STORAGE) {
 		CartsDao = CartsDaoMongoDB;
 		break;
 
-	// case "firebase":
-	// 	const { default: PersonasDaoFirebase } = await import("./PersonasDaoFirebase.js");
-	// 	personasDao = new PersonasDaoFirebase();
-	// 	break;
+	case "firebase":
+		const { default: ProductsDaoFirebase } = await import("./firebase/productsDaoFirebase.js");
+		ProductsDao = ProductsDaoFirebase;
+		const { default: CartsDaoFirebase } = await import("./firebase/cartsDaoFirebase.js");
+		CartsDao = CartsDaoFirebase;
+		break;
 }
 
 export { ProductsDao, CartsDao };

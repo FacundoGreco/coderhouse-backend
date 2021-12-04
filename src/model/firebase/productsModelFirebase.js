@@ -49,8 +49,9 @@ class Products {
 		const snapshot = await collection.where("id", "==", id).get();
 		const result = [];
 		snapshot.forEach((product) => result.push(product.data()));
+		const ref = snapshot.docs[0] ? snapshot.docs[0].ref : null;
 
-		return { ref: snapshot.docs[0].ref, product: result[0] };
+		return { ref: ref, product: result[0] };
 	}
 
 	static async updateProduct(id, props) {
