@@ -1,10 +1,4 @@
-import { MongoClient } from "mongodb";
-import config from "../../config.js";
-
-const client = new MongoClient(config.mongoDB.uri, config.mongoDB.options);
-await client.connect();
-const collection = client.db(config.mongoDB.db).collection("carts");
-
+import { cartsCollection as collection } from "./mongoDB.js";
 class Carts {
 	constructor() {
 		this.products = [];
