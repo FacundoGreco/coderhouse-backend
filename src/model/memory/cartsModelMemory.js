@@ -25,7 +25,7 @@ class Carts {
 	}
 
 	static getCartProducts(id) {
-		const cart = await Carts.getCartById(id);
+		const cart = Carts.getCartById(id);
 
 		if (cart) {
 			console.log("Cart products sent.");

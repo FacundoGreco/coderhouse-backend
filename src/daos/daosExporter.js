@@ -9,6 +9,13 @@ switch (config.STORAGE) {
 		const { default: CartsDaoFiles } = await import("./files/cartsDaoFiles.js");
 		CartsDao = CartsDaoFiles;
 		break;
+
+	case "memory":
+		const { default: ProductsDaoMemory } = await import("./memory/productsDaoMemory.js");
+		ProductsDao = ProductsDaoMemory;
+		const { default: CartsDaoMemory } = await import("./memory/cartsDaoMemory.js");
+		CartsDao = CartsDaoMemory;
+		break;
 	// case "firebase":
 	// 	const { default: PersonasDaoFirebase } = await import("./PersonasDaoFirebase.js");
 	// 	personasDao = new PersonasDaoFirebase();
