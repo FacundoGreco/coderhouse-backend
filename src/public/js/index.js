@@ -1,4 +1,5 @@
 const socket = io();
+const fakerProductsTableContainer = document.querySelector(".fakerProductsTableContainer");
 const productsTableContainer = document.querySelector(".productsTableContainer");
 const form = document.querySelector(".addProductForm");
 const messageCenter = document.querySelector(".messageCenter");
@@ -8,6 +9,21 @@ const messageInput = messageCenter.querySelector("#message");
 const sendButton = messageCenter.querySelector(".sendButton");
 
 //-----------------SOCKETS---------------------//
+
+//ON LOAD FAKER PRODUCTS
+socket.on("loadFakerProducts", async (fakerProducts) => {
+	//Removes old table
+	let oldProductsTable = fakerProductsTableContainer.querySelector(".fakerProductsTable");
+	fakerProductsTableContainer.removeChild(oldProductsTable);
+
+	//Fetches fakerProductsTable and compiles it
+	const fakerProductsTableFile = await fetch("views/partials/products/fakerProductsTable.ejs");
+	const fakerProductsTableEjs = await fakerProductsTableFile.text();
+
+	//Renders table
+	const fakerProductsTable = ejs.render(fakerProductsTableEjs, { fakerProducts: fakerProducts });
+	fakerProductsTableContainer.innerHTML += fakerProductsTable;
+});
 
 //ON LOAD PRODUCTS
 socket.on("loadProducts", async (products) => {

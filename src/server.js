@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const { router: productsRouter } = require("./routers/productsApi.js");
 const { router: chatRouter } = require("./routers/chatApi.js");
+const getFakerProducts = require("./model/fakerProducts.js");
 
 //MODELS
 const Container = require("./model/Container");
@@ -22,11 +23,15 @@ app.use(express.static("./src/public"));
 //ROUTES
 app.get("/", (req, res) => {
 	res.render("./pages/index", {
+		fakerProducts: [],
 		products: [],
 		messages: [],
 	});
 });
 
+app.get("/api/faker/products", (req, res) => {
+	res.json(getFakerProducts());
+});
 app.use("/api/products", productsRouter);
 app.use("/api/chat", chatRouter);
 
@@ -45,12 +50,16 @@ const io = new IOServer(server);
 io.on("connection", async (socket) => {
 	console.log("User connected...");
 
+	//Fetch fakerProducts
+	const fakerProducts = getFakerProducts();
+
 	//Fetch products
 	const products = await sqlite3Model.getElementsAll();
 
 	//Fetch messages
 	const messages = await mysqlModel.getElementsAll();
 
+	socket.emit("loadFakerProducts", fakerProducts);
 	socket.emit("loadProducts", products);
 	socket.emit("loadMessages", messages);
 });
