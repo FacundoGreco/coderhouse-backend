@@ -1,10 +1,10 @@
-const { Router } = require("express");
+import { Router } from "express";
 const router = new Router();
 
 //MODEL
-const Container = require("../model/Container");
-const { options } = require("../db/options/mysql");
-const model = new Container(options, "messages");
+import { MessagesModel } from "../model/MessagesModel.js";
+import { messagesCollection } from "../db/options/mongoDB.js";
+const model = new MessagesModel(messagesCollection);
 
 //MIDDLEWARES
 function validateMessage(req, res, next) {
@@ -16,9 +16,9 @@ function validateMessage(req, res, next) {
 //HELPER FUNCTIONS
 async function emitLoadMessages() {
 	try {
-		const messages = await model.getElementsAll();
+		const messages = await model.getMessagesAll();
 
-		const { io } = require("../server");
+		const { io } = await import("../server.js");
 		io.sockets.emit("loadMessages", messages);
 	} catch (error) {
 		console.log(error.message);
@@ -29,7 +29,7 @@ async function emitLoadMessages() {
 //------------- GET HANDLING --------------------------------------//
 router.get("/", async (req, res) => {
 	try {
-		const messages = await model.getElementsAll();
+		const messages = await model.getMessagesAll();
 
 		res.json(messages);
 	} catch (error) {
@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
 //------------- POST HANDLING -------------------------------------//
 router.post("/", validateMessage, async (req, res) => {
 	try {
-		const newMessage = await model.insertElement(req.body);
+		const newMessage = await model.insertMessage(req.body);
 
 		res.json(newMessage);
 
@@ -50,4 +50,4 @@ router.post("/", validateMessage, async (req, res) => {
 	}
 });
 
-exports.router = router;
+export { router };

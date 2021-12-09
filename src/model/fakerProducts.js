@@ -1,4 +1,4 @@
-const faker = require("faker");
+import faker from "faker";
 
 function getFakerProducts() {
 	let products = [];
@@ -14,4 +14,4 @@ function getFakerProducts() {
 	return products;
 }
 
-module.exports = getFakerProducts;
+export { getFakerProducts };

@@ -1,17 +1,18 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const { router: productsRouter } = require("./routers/productsApi.js");
-const { router: chatRouter } = require("./routers/chatApi.js");
-const getFakerProducts = require("./model/fakerProducts.js");
+import { router as productsRouter } from "./routers/productsApi.js";
+import { router as chatRouter } from "./routers/chatApi.js";
+import { getFakerProducts } from "./model/fakerProducts.js";
 
 //MODELS
-const Container = require("./model/Container");
+import { Container } from "./model/Container.js";
+import { MessagesModel } from "./model/MessagesModel.js";
 
-const { options: sqlite3Options } = require("./db/options/sqlite3");
+import { options as sqlite3Options } from "./db/options/sqlite3.js";
 const sqlite3Model = new Container(sqlite3Options, "products");
 
-const { options: mysqlOptions } = require("./db/options/mysql");
-const mysqlModel = new Container(mysqlOptions, "messages");
+import { messagesCollection } from "./db/options/mongoDB.js";
+const mongoModel = new MessagesModel(messagesCollection);
 
 //MIDDLEWARES
 app.set("view engine", "ejs");
@@ -44,7 +45,7 @@ const server = app.listen(PORT, () => {
 server.on("error", (err) => console.log(`Error in server: ${err}`));
 
 //WEBSOCKETS
-const { Server: IOServer } = require("socket.io");
+import { Server as IOServer } from "socket.io";
 const io = new IOServer(server);
 
 io.on("connection", async (socket) => {
@@ -57,11 +58,11 @@ io.on("connection", async (socket) => {
 	const products = await sqlite3Model.getElementsAll();
 
 	//Fetch messages
-	const messages = await mysqlModel.getElementsAll();
+	const messages = await mongoModel.getMessagesAll();
 
 	socket.emit("loadFakerProducts", fakerProducts);
 	socket.emit("loadProducts", products);
 	socket.emit("loadMessages", messages);
 });
 
-exports.io = io;
+export { io };

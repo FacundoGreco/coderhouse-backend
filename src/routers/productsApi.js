@@ -1,9 +1,9 @@
-const { Router } = require("express");
+import { Router } from "express";
 const router = new Router();
 
 //MODEL
-const Container = require("../model/Container");
-const { options } = require("../db/options/sqlite3");
+import { Container } from "../model/Container.js";
+import { options } from "../db/options/sqlite3.js";
 const model = new Container(options, "products");
 
 //MIDDLEWARES
@@ -52,7 +52,7 @@ async function emitLoadProducts() {
 	try {
 		const products = await model.getElementsAll();
 
-		const { io } = require("../server");
+		const { io } = await import("../server.js");
 		io.sockets.emit("loadProducts", products);
 	} catch (error) {
 		console.log(error.message);
@@ -127,4 +127,4 @@ router.delete("/:id", productsAvailable, validateId, productExists, async (req, 
 });
 
 //EXPORTS
-exports.router = router;
+export { router };
