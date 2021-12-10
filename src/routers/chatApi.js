@@ -8,8 +8,10 @@ const model = new MessagesModel(messagesCollection);
 
 //MIDDLEWARES
 function validateMessage(req, res, next) {
-	const { email, message } = req.body;
-	if (!email || !message) return res.status(406).json({ error: "Invalid message." });
+	const { author, message, date } = req.body;
+	const { id, name, surname, age, alias } = author;
+	if (!id || !name || !surname || !age || !alias || !message || !date)
+		return res.status(406).json({ error: "Invalid message." });
 	else next();
 }
 

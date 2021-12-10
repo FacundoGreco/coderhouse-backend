@@ -1,7 +1,27 @@
 <div class="messageCenter w-100 d-flex flex-column justify-content-start align-items-center">
-	<div class="form-group w-100 mb-4 border-bottom border-light pb-2">
+	<div class="form-group w-100 mb-2 pb-2">
 		<label for="email">Email</label>
-		<input class="form-control" type="email" id="email" placeholder="myname@mail.com" required />
+		<input class="form-control" type="email" id="email" placeholder="Enter your email..." required />
+	</div>
+	<div class="form-group w-100 mb-2 pb-2">
+		<label for="name">Name</label>
+		<input class="form-control" type="text" id="name" placeholder="Enter your name..." required />
+	</div>
+	<div class="form-group w-100 mb-2 pb-2">
+		<label for="surname">Surname</label>
+		<input class="form-control" type="text" id="surname" placeholder="Enter your surname..." required />
+	</div>
+	<div class="form-group w-100 mb-2 pb-2">
+		<label for="age">Age</label>
+		<input class="form-control" type="number" id="age" placeholder="Enter your age..." required />
+	</div>
+	<div class="form-group w-100 mb-2 pb-2">
+		<label for="alias">Alias</label>
+		<input class="form-control" type="text" id="alias" placeholder="Enter your alias..." required />
+	</div>
+	<div class="form-group w-100 mb-2 pb-2">
+		<label for="avatar">Avatar</label>
+		<input class="form-control" type="url" id="avatar" placeholder="Enter icon url..." />
 	</div>
 
 	<%- include("./chat") %>

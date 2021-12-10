@@ -21,6 +21,10 @@
 	margin: 0;
 }
 
+.chat li .avatar {
+	width: 40px;
+}
+
 .chat li .email {
 	color: rgb(52, 140, 255);
 }

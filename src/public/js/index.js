@@ -5,6 +5,11 @@ const form = document.querySelector(".addProductForm");
 const messageCenter = document.querySelector(".messageCenter");
 const sendMessage = messageCenter.querySelector(".sendMessage");
 const emailInput = messageCenter.querySelector("#email");
+const nameInput = messageCenter.querySelector("#name");
+const surnameInput = messageCenter.querySelector("#surname");
+const ageInput = messageCenter.querySelector("#age");
+const aliasInput = messageCenter.querySelector("#alias");
+const avatarInput = messageCenter.querySelector("#avatar");
 const messageInput = messageCenter.querySelector("#message");
 const sendButton = messageCenter.querySelector(".sendButton");
 
@@ -98,15 +103,30 @@ form.addEventListener("submit", async (e) => {
 //MESSAGE CENTER
 
 //ON CHANGE EMAIL
-emailInput.addEventListener("change", (e) => {
-	if (emailInput.value != "") {
+function handleInputsChange() {
+	let areInputsFilled = true;
+	const messageCenterInputs = [emailInput, nameInput, surnameInput, ageInput, aliasInput];
+
+	for (let i = 0; i < messageCenterInputs.length; i++) {
+		if (messageCenterInputs[i].value === "") {
+			areInputsFilled = false;
+			break;
+		}
+	}
+
+	if (areInputsFilled) {
 		messageInput.disabled = false;
 		sendButton.disabled = false;
 	} else {
 		messageInput.disabled = true;
 		sendButton.disabled = true;
 	}
-});
+}
+emailInput.addEventListener("change", handleInputsChange);
+nameInput.addEventListener("change", handleInputsChange);
+surnameInput.addEventListener("change", handleInputsChange);
+ageInput.addEventListener("change", handleInputsChange);
+aliasInput.addEventListener("change", handleInputsChange);
 
 //GET FORMATTED DATE
 function getFormattedDate() {
@@ -124,9 +144,20 @@ sendButton.addEventListener("click", async (e) => {
 
 	//Get input values
 	const email = emailInput.value;
+	const name = nameInput.value;
+	const surname = surnameInput.value;
+	const age = ageInput.value;
+	const alias = aliasInput.value;
+	const avatar = avatarInput.value;
+
 	const date = getFormattedDate();
 	const message = messageInput.value;
-	const newMessage = { email: email, date: date, message: message };
+
+	const newMessage = {
+		author: { id: email, name: name, surname: surname, age: age, alias: alias, avatar: avatar },
+		message: message,
+		date: date,
+	};
 
 	try {
 		//Post new product
