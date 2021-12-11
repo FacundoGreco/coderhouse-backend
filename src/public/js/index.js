@@ -2,6 +2,7 @@ const socket = io();
 const fakerProductsTableContainer = document.querySelector(".fakerProductsTableContainer");
 const productsTableContainer = document.querySelector(".productsTableContainer");
 const form = document.querySelector(".addProductForm");
+const messageCenterTitle = document.querySelector(".messageCenterContainer h2");
 const messageCenter = document.querySelector(".messageCenter");
 const sendMessage = messageCenter.querySelector(".sendMessage");
 const emailInput = messageCenter.querySelector("#email");
@@ -12,6 +13,11 @@ const aliasInput = messageCenter.querySelector("#alias");
 const avatarInput = messageCenter.querySelector("#avatar");
 const messageInput = messageCenter.querySelector("#message");
 const sendButton = messageCenter.querySelector(".sendButton");
+
+//NORMALIZR SCHEMA
+const authorSchema = new normalizr.schema.Entity("authors");
+const messageSchema = new normalizr.schema.Entity("messages", { author: authorSchema }, { idAttribute: "_id" });
+const messagesSchema = [messageSchema];
 
 //-----------------SOCKETS---------------------//
 
@@ -45,12 +51,26 @@ socket.on("loadProducts", async (products) => {
 	productsTableContainer.innerHTML += productsTable;
 });
 
+function getDenormalizedMessages(normalizedMessages) {
+	const messages = normalizr.denormalize(normalizedMessages.result, messagesSchema, normalizedMessages.entities);
+
+	const denormalizedLength = JSON.stringify(messages).length;
+	const normalizedLength = JSON.stringify(normalizedMessages).length;
+	const compressionPercentage = 100 - (normalizedLength * 100) / denormalizedLength;
+
+	messageCenterTitle.innerHTML = `Messages Center - Compression: ${compressionPercentage}`;
+
+	return messages;
+}
+
 //ON LOAD MESSAGES
-socket.on("loadMessages", async (messages) => {
-	if (!messages) {
+socket.on("loadMessages", async (normalizedMessages) => {
+	if (!normalizedMessages) {
 		emailInput.disabled = true;
 		sendButton.disabled = true;
 	}
+
+	const messages = getDenormalizedMessages(normalizedMessages);
 
 	//Removes old chat
 	let oldChat = messageCenter.querySelector(".chat");

@@ -1,3 +1,10 @@
+import { normalize, schema } from "normalizr";
+
+//NORMALIZR SCHEMA
+const authorSchema = new schema.Entity("authors");
+const messageSchema = new schema.Entity("messages", { author: authorSchema }, { idAttribute: "_id" });
+const messagesSchema = [messageSchema];
+
 class MessagesModel {
 	constructor(collection) {
 		this.collection = collection;
@@ -6,9 +13,11 @@ class MessagesModel {
 	async getMessagesAll() {
 		try {
 			const messages = await this.collection.find().toArray();
+			const normalizedMessages = normalize(messages, messagesSchema);
+
 			console.log("Messages sent.");
 
-			return messages;
+			return normalizedMessages;
 		} catch (error) {
 			console.log(error.message);
 			throw error;
