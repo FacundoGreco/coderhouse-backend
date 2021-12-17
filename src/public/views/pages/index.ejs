@@ -2,8 +2,20 @@
 	<head>
 		<title>WebSockets</title>
 		<%- include("../partials/head") %>
+
+		<script src="/js/ejs.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/normalizr@3.6.1/dist/normalizr.browser.min.js"></script>
+		<script defer src="/js/index.js"></script>
 	</head>
 	<body>
+		<div class="loginSection d-flex flex-column align-items-center py-4">
+			<div class="loginContainer d-flex flex-column align-items-center bg-dark text-white w-75 px-3">
+				<h2 class="mb-3 mt-3">Login</h2>
+				<%- include("../partials/sessions/login") %>
+			</div>
+		</div>
+
 		<div class="productsSection d-flex flex-column align-items-center pt-4">
 			<div class="productsContainer d-flex flex-column align-items-center w-75">
 				<%- include("../partials/products/form") %>

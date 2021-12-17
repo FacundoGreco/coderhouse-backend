@@ -30,6 +30,12 @@ app.get("/", (req, res) => {
 	});
 });
 
+app.get("/logout", (req, res) => {
+	let session = { name: "Test Name" };
+
+	res.render("./pages/logout", { session });
+});
+
 app.get("/api/faker/products", (req, res) => {
 	res.json(getFakerProducts());
 });
