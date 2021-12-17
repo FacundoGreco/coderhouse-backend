@@ -24,6 +24,7 @@ app.use(express.static("./src/public"));
 //ROUTES
 app.get("/", (req, res) => {
 	res.render("./pages/index", {
+		session: { name: "Test Name" },
 		fakerProducts: [],
 		products: [],
 		messages: [],
