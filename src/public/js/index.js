@@ -1,4 +1,5 @@
 const socket = io();
+const logOutButton = document.querySelector(".logOutButton");
 const fakerProductsTableContainer = document.querySelector(".fakerProductsTableContainer");
 const productsTableContainer = document.querySelector(".productsTableContainer");
 const form = document.querySelector(".addProductForm");
@@ -18,6 +19,15 @@ const sendButton = messageCenter.querySelector(".sendButton");
 const authorSchema = new normalizr.schema.Entity("authors");
 const messageSchema = new normalizr.schema.Entity("messages", { author: authorSchema }, { idAttribute: "_id" });
 const messagesSchema = [messageSchema];
+
+//-----------------SESSIONS--------------------//
+
+//ON LOG OUT
+async function onLogOut() {
+	window.location.replace("/logout");
+}
+
+logOutButton.addEventListener("click", onLogOut);
 
 //-----------------SOCKETS---------------------//
 

@@ -1,5 +1,6 @@
 import { Router } from "express";
 const router = new Router();
+import { validateSession } from "../server.js";
 
 //MODEL
 import { MessagesModel } from "../model/MessagesModel.js";
@@ -29,7 +30,7 @@ async function emitLoadMessages() {
 
 //ROUTES
 //------------- GET HANDLING --------------------------------------//
-router.get("/", async (req, res) => {
+router.get("/", validateSession, async (req, res) => {
 	try {
 		const messages = await model.getMessagesAll();
 
@@ -40,7 +41,7 @@ router.get("/", async (req, res) => {
 });
 
 //------------- POST HANDLING -------------------------------------//
-router.post("/", validateMessage, async (req, res) => {
+router.post("/", validateSession, validateMessage, async (req, res) => {
 	try {
 		const newMessage = await model.insertMessage(req.body);
 

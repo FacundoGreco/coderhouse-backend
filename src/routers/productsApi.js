@@ -1,5 +1,6 @@
 import { Router } from "express";
 const router = new Router();
+import { validateSession } from "../server.js";
 
 //MODEL
 import { Container } from "../model/Container.js";
@@ -61,7 +62,7 @@ async function emitLoadProducts() {
 
 //ROUTES
 //------------- GET HANDLING --------------------------------------//
-router.get("/", productsAvailable, async (req, res) => {
+router.get("/", validateSession, productsAvailable, async (req, res) => {
 	try {
 		const products = await model.getElementsAll();
 
@@ -71,7 +72,7 @@ router.get("/", productsAvailable, async (req, res) => {
 	}
 });
 
-router.get("/:id", productsAvailable, validateId, productExists, async (req, res) => {
+router.get("/:id", validateSession, productsAvailable, validateId, productExists, async (req, res) => {
 	const id = Number(req.params.id);
 
 	try {
@@ -84,7 +85,7 @@ router.get("/:id", productsAvailable, validateId, productExists, async (req, res
 });
 
 //------------- POST HANDLING -------------------------------------//
-router.post("/", validateProduct, async (req, res) => {
+router.post("/", validateSession, validateProduct, async (req, res) => {
 	try {
 		const product = await model.insertElement(req.body);
 
@@ -97,7 +98,7 @@ router.post("/", validateProduct, async (req, res) => {
 });
 
 //------------- PUT HANDLING --------------------------------------//
-router.put("/:id", productsAvailable, validateId, productExists, async (req, res) => {
+router.put("/:id", validateSession, productsAvailable, validateId, productExists, async (req, res) => {
 	const id = Number(req.params.id);
 
 	try {
@@ -112,7 +113,7 @@ router.put("/:id", productsAvailable, validateId, productExists, async (req, res
 });
 
 //------------- DELETE HANDLING -----------------------------------//
-router.delete("/:id", productsAvailable, validateId, productExists, async (req, res) => {
+router.delete("/:id", validateSession, productsAvailable, validateId, productExists, async (req, res) => {
 	const id = Number(req.params.id);
 
 	try {
