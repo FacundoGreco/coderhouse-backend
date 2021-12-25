@@ -17,23 +17,14 @@ const sqlite3Model = new Container(sqlite3Options, "products");
 import { messagesCollection } from "./db/options/mongoDB.js";
 const mongoModel = new MessagesModel(messagesCollection);
 
-//HELPER FUNCTIONS
-function renderIndex(req, res, fakerProducts, products, messages) {
-	res.render("./pages/index", {
-		session: { ...req.session },
-		fakerProducts: fakerProducts,
-		products: products,
-		messages: messages,
-	});
-}
-
 //MIDDLEWARES
 function validateSession(req, res, next) {
 	if (req.session.name) {
 		return next();
 	}
-	res.redirect("/");
+	res.redirect("/login");
 }
+
 app.set("view engine", "ejs");
 app.set("views", "./src/public/views");
 app.use(express.json());
@@ -54,9 +45,25 @@ app.use(
 	})
 );
 
+//HELPER FUNCTIONS
+function renderIndex(req, res, fakerProducts, products, messages) {
+	res.render("./pages/index", {
+		session: { ...req.session },
+		fakerProducts: fakerProducts,
+		products: products,
+		messages: messages,
+	});
+}
+
 //ROUTES
-app.get("/", (req, res) => {
-	renderIndex(req, res, [], [], []);
+
+//Auth
+app.get("/login", (req, res) => {
+	res.render("./pages/login");
+});
+
+app.get("/register", (req, res) => {
+	res.render("./pages/register");
 });
 
 app.post("/login", (req, res) => {
@@ -76,9 +83,15 @@ app.get("/logout", (req, res) => {
 	res.render("./pages/logout", { session: tempSession });
 });
 
+//Logged user endpoints
+app.get("/", validateSession, (req, res) => {
+	renderIndex(req, res, [], [], []);
+});
+
 app.get("/api/faker/products", (req, res) => {
 	res.json(getFakerProducts());
 });
+
 app.use("/api/products", productsRouter);
 app.use("/api/chat", chatRouter);
 
