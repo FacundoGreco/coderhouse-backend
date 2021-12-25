@@ -2,6 +2,8 @@ import express from "express";
 const app = express();
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import { passport } from "./passport.js";
+import { connectDb } from "./db/options/mongoose.js";
 
 import { router as productsRouter } from "./routers/productsApi.js";
 import { router as chatRouter } from "./routers/chatApi.js";
@@ -19,7 +21,7 @@ const mongoModel = new MessagesModel(messagesCollection);
 
 //MIDDLEWARES
 function validateSession(req, res, next) {
-	if (req.session.name) {
+	if (req.isAuthenticated()) {
 		return next();
 	}
 	res.redirect("/login");
@@ -34,7 +36,7 @@ app.use(
 	session({
 		store: MongoStore.create({
 			mongoUrl:
-				"mongodb+srv://root:PkQ9aZqAlhtUHy3a@cluster0.1g2rb.mongodb.net/challenge-sessions?retryWrites=true&w=majority",
+				"mongodb+srv://root:PkQ9aZqAlhtUHy3a@cluster0.1g2rb.mongodb.net/challenge-auth?retryWrites=true&w=majority",
 			mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
 		}),
 		secret: "This is my secret word.",
@@ -45,10 +47,13 @@ app.use(
 	})
 );
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 //HELPER FUNCTIONS
 function renderIndex(req, res, fakerProducts, products, messages) {
 	res.render("./pages/index", {
-		session: { ...req.session },
+		user: req.user,
 		fakerProducts: fakerProducts,
 		products: products,
 		messages: messages,
@@ -59,6 +64,10 @@ function renderIndex(req, res, fakerProducts, products, messages) {
 
 //Auth
 app.get("/login", (req, res) => {
+	if (req.isAuthenticated()) {
+		return res.redirect("/");
+	}
+
 	res.render("./pages/login");
 });
 
@@ -66,21 +75,28 @@ app.get("/register", (req, res) => {
 	res.render("./pages/register");
 });
 
-app.post("/login", (req, res) => {
-	const { name } = req.body;
+//Error
+app.get("/error-login", (req, res) => {
+	res.render("./pages/errorLogin");
+});
 
-	if (name) {
-		req.session.name = name;
-	}
+app.get("/error-register", (req, res) => {
+	res.render("./pages/errorRegister");
+});
+
+//Post
+app.post("/login", passport.authenticate("login", { failureRedirect: "/error-login" }), (req, res) => {
 	res.redirect("/");
 });
 
-app.get("/logout", (req, res) => {
-	if (!req.session.name) return res.redirect("/");
+app.post("/register", passport.authenticate("register", { failureRedirect: "/error-register" }), (req, res) => {
+	res.redirect("/");
+});
 
-	const tempSession = { ...req.session };
-	req.session.destroy();
-	res.render("./pages/logout", { session: tempSession });
+app.get("/logout", validateSession, (req, res) => {
+	const tempUser = req.user;
+	req.logout();
+	res.render("./pages/logout", { user: tempUser });
 });
 
 //Logged user endpoints
@@ -96,32 +112,39 @@ app.use("/api/products", productsRouter);
 app.use("/api/chat", chatRouter);
 
 //START SERVER
-const PORT = process.env.PORT || 8080;
-
-const server = app.listen(PORT, () => {
-	console.log(`Server on port ${server.address().port}`);
-});
-server.on("error", (err) => console.log(`Error in server: ${err}`));
-
-//WEBSOCKETS
 import { Server as IOServer } from "socket.io";
-const io = new IOServer(server);
+let io;
 
-io.on("connection", async (socket) => {
-	console.log("User connected...");
+connectDb((err) => {
+	if (err) return console.log("Error connecting to database: ", err);
+	console.log("DATABASE CONNECTED");
 
-	//Fetch fakerProducts
-	const fakerProducts = getFakerProducts();
+	const PORT = process.env.PORT || 8080;
 
-	//Fetch products
-	const products = await sqlite3Model.getElementsAll();
+	const server = app.listen(PORT, () => {
+		console.log(`Server on port ${server.address().port}`);
+	});
+	server.on("error", (err) => console.log(`Error in server: ${err}`));
 
-	//Fetch messages
-	const messages = await mongoModel.getMessagesAll();
+	//WEBSOCKETS
+	io = new IOServer(server);
 
-	socket.emit("loadFakerProducts", fakerProducts);
-	socket.emit("loadProducts", products);
-	socket.emit("loadMessages", messages);
+	io.on("connection", async (socket) => {
+		console.log("User connected...");
+
+		//Fetch fakerProducts
+		const fakerProducts = getFakerProducts();
+
+		//Fetch products
+		const products = await sqlite3Model.getElementsAll();
+
+		//Fetch messages
+		const messages = await mongoModel.getMessagesAll();
+
+		socket.emit("loadFakerProducts", fakerProducts);
+		socket.emit("loadProducts", products);
+		socket.emit("loadMessages", messages);
+	});
 });
 
 export { io, validateSession };

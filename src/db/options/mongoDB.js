@@ -5,6 +5,6 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 await client.connect();
 
-const messagesCollection = client.db("challenge-normalization").collection("messages");
+const messagesCollection = client.db("challenge-auth").collection("messages");
 
 export { messagesCollection };
