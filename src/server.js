@@ -1,3 +1,11 @@
+import parseArgs from "minimist";
+const args = parseArgs(process.argv.slice(2));
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+import dotenv from "dotenv";
+dotenv.config({ path: path.resolve(__dirname, "config.env") });
+
 import express from "express";
 const app = express();
 import session from "express-session";
@@ -35,15 +43,14 @@ app.use(express.static("./src/public"));
 app.use(
 	session({
 		store: MongoStore.create({
-			mongoUrl:
-				"mongodb+srv://root:PkQ9aZqAlhtUHy3a@cluster0.1g2rb.mongodb.net/challenge-auth?retryWrites=true&w=majority",
+			mongoUrl: process.env.MONGO_URL,
 			mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
 		}),
-		secret: "This is my secret word.",
+		secret: process.env.SECRET,
 		resave: false,
 		saveUninitialized: false,
 		rolling: true,
-		cookie: { maxAge: 60000 * 10 },
+		cookie: { maxAge: Number(process.env.MAX_AGE) },
 	})
 );
 
@@ -119,7 +126,7 @@ connectDb((err) => {
 	if (err) return console.log("Error connecting to database: ", err);
 	console.log("DATABASE CONNECTED");
 
-	const PORT = process.env.PORT || 8080;
+	const PORT = args.p || 8080;
 
 	const server = app.listen(PORT, () => {
 		console.log(`Server on port ${server.address().port}`);
