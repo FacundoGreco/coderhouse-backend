@@ -15,6 +15,7 @@ import { connectDb } from "./db/options/mongoose.js";
 
 import { router as productsRouter } from "./routers/productsApi.js";
 import { router as chatRouter } from "./routers/chatApi.js";
+import { router as infoRouter } from "./routers/info.js";
 import { getFakerProducts } from "./model/fakerProducts.js";
 
 //MODELS
@@ -117,6 +118,7 @@ app.get("/api/faker/products", (req, res) => {
 
 app.use("/api/products", productsRouter);
 app.use("/api/chat", chatRouter);
+app.use("/info", infoRouter);
 
 //START SERVER
 import { Server as IOServer } from "socket.io";
