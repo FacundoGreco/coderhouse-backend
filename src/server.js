@@ -1,32 +1,39 @@
-import parseArgs from "minimist";
+const parseArgs = require("minimist");
 const args = parseArgs(process.argv.slice(2));
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
-const __dirname = dirname(fileURLToPath(import.meta.url));
-import dotenv from "dotenv";
+const path = require("path");
+const { fileURLToPath } = require("url");
+const dotenv = require("dotenv");
 dotenv.config({ path: path.resolve(__dirname, "config.env") });
 
-import express from "express";
+const express = require("express");
 const app = express();
-import session from "express-session";
-import MongoStore from "connect-mongo";
-import { passport } from "./passport.js";
-import { connectDb } from "./db/options/mongoose.js";
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const { passport } = require("./passport.js");
+const { connectDb } = require("./db/options/mongoose.js");
 
-import { router as productsRouter } from "./routers/productsApi.js";
-import { router as chatRouter } from "./routers/chatApi.js";
-import { router as infoRouter } from "./routers/info.js";
-import { router as randomsRouter } from "./routers/randomsApi.js";
-import { getFakerProducts } from "./model/fakerProducts.js";
+const { router: productsRouter } = require("./routers/productsApi.js");
+const { router: chatRouter } = require("./routers/chatApi.js");
+const { router: infoRouter } = require("./routers/info.js");
+const { router: randomsRouter } = require("./routers/randomsApi.js");
+const { getFakerProducts } = require("./model/fakerProducts.js");
 
+//CLUSTER
+const cluster = require("cluster");
+const os = require("os");
+const numCPUs = os.cpus().length;
+const { Server: IOServer } = require("socket.io");
+let io;
+const SERVER_MODE = process.env.SERVER_MODE;
+console.log(SERVER_MODE);
 //MODELS
-import { Container } from "./model/Container.js";
-import { MessagesModel } from "./model/MessagesModel.js";
+const { Container } = require("./model/Container.js");
+const { MessagesModel } = require("./model/MessagesModel.js");
 
-import { options as sqlite3Options } from "./db/options/sqlite3.js";
+const { options: sqlite3Options } = require("./db/options/sqlite3.js");
 const sqlite3Model = new Container(sqlite3Options, "products");
 
-import { messagesCollection } from "./db/options/mongoDB.js";
+const { messagesCollection } = require("./db/options/mongoDB.js");
 const mongoModel = new MessagesModel(messagesCollection);
 
 //MIDDLEWARES
@@ -36,6 +43,34 @@ function validateSession(req, res, next) {
 	}
 	res.redirect("/login");
 }
+
+//HELPER FUNCTIONS
+function renderIndex(req, res, fakerProducts, products, messages) {
+	res.render("./pages/index", {
+		user: req.user,
+		fakerProducts: fakerProducts,
+		products: products,
+		messages: messages,
+	});
+}
+
+/* ------------------------------------------------------------------------------ */
+/* MASTER */
+// if (cluster.isPrimary) {
+// console.log(numCPUs);
+// console.log(`PID MASTER ${process.pid}`);
+
+// for (let i = 0; i < numCPUs; i++) {
+// 	cluster.fork();
+// }
+
+// cluster.on("exit", (worker) => {
+// 	console.log(`Worker ${worker.process.pid} died -> ${new Date().toLocaleDateString()}`);
+// 	cluster.fork();
+// });
+// } else {
+/* ------------------------------------------------------------------------------ */
+/* WORKERS */
 
 app.set("view engine", "ejs");
 app.set("views", "./src/public/views");
@@ -58,16 +93,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-//HELPER FUNCTIONS
-function renderIndex(req, res, fakerProducts, products, messages) {
-	res.render("./pages/index", {
-		user: req.user,
-		fakerProducts: fakerProducts,
-		products: products,
-		messages: messages,
-	});
-}
 
 //ROUTES
 
@@ -123,14 +148,11 @@ app.use("/info", infoRouter);
 app.use("/api/randoms", randomsRouter);
 
 //START SERVER
-import { Server as IOServer } from "socket.io";
-let io;
-
 connectDb((err) => {
 	if (err) return console.log("Error connecting to database: ", err);
 	console.log("DATABASE CONNECTED");
 
-	const PORT = args.p || 8080;
+	const PORT = parseInt(process.argv[2]) || 8080;
 
 	const server = app.listen(PORT, () => {
 		console.log(`Server on port ${server.address().port}`);
@@ -157,5 +179,5 @@ connectDb((err) => {
 		socket.emit("loadMessages", messages);
 	});
 });
-
-export { io, validateSession };
+// }
+exports = { io, validateSession };

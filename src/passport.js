@@ -1,7 +1,7 @@
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-import { User } from "./db/options/mongoose.js";
-import bcrypt from "bcrypt";
+const passport = require("passport");
+const { Strategy: LocalStrategy } = require("passport-local");
+const { User } = require("./db/options/mongoose.js");
+const bcrypt = require("bcrypt");
 
 //HELPER FUNCTIONS
 function isValidPassword(user, password) {
@@ -67,4 +67,4 @@ passport.deserializeUser((id, done) => {
 	User.findById(id, done);
 });
 
-export { passport };
+exports = { passport };

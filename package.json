@@ -21,7 +21,6 @@
 	"name": "coderhouse-backend",
 	"version": "1.0.0",
 	"main": "./src/server.js",
-	"type": "module",
 	"scripts": {
 		"start": "node src/model/createTables && node src/server",
 		"test": "echo \"Error: no test specified\" && exit 1"

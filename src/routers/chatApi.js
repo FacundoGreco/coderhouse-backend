@@ -1,10 +1,10 @@
-import { Router } from "express";
+const { Router } = require("express");
 const router = new Router();
-import { validateSession } from "../server.js";
+const { validateSession } = require("../server.js");
 
 //MODEL
-import { MessagesModel } from "../model/MessagesModel.js";
-import { messagesCollection } from "../db/options/mongoDB.js";
+const { MessagesModel } = require("../model/MessagesModel.js");
+const { messagesCollection } = require("../db/options/mongoDB.js");
 const model = new MessagesModel(messagesCollection);
 
 //MIDDLEWARES
@@ -53,4 +53,4 @@ router.post("/", validateSession, validateMessage, async (req, res) => {
 	}
 });
 
-export { router };
+exports = { router };

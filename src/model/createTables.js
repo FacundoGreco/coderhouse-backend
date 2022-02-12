@@ -1,6 +1,6 @@
-import { options as mysqlOptions } from "../db/options/mysql.js";
-import { options as sqlite3Options } from "../db/options/sqlite3.js";
-import knexLib from "knex";
+const { options: mysqlOptions } = require("../db/options/mysql.js");
+const { options: sqlite3Options } = require("../db/options/sqlite3.js");
+const knexLib = require("knex");
 
 async function createTables() {
 	//PRODUCTS TABLE

@@ -1,6 +1,6 @@
-import { Router } from "express";
+const { Router } = require("express");
 const router = new Router();
-import parseArgs from "minimist";
+const parseArgs = require("minimist");
 const args = parseArgs(process.argv.slice(2));
 const path = parseArgs(process.argv)._[1];
 
@@ -22,4 +22,4 @@ router.get("/", async (req, res) => {
 	}
 });
 
-export { router };
+exports = { router };

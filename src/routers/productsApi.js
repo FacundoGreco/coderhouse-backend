@@ -1,10 +1,10 @@
-import { Router } from "express";
+const { Router } = require("express");
 const router = new Router();
-import { validateSession } from "../server.js";
+const { validateSession } = require("../server.js");
 
 //MODEL
-import { Container } from "../model/Container.js";
-import { options } from "../db/options/sqlite3.js";
+const { Container } = require("../model/Container.js");
+const { options } = require("../db/options/sqlite3.js");
 const model = new Container(options, "products");
 
 //MIDDLEWARES
@@ -128,4 +128,4 @@ router.delete("/:id", validateSession, productsAvailable, validateId, productExi
 });
 
 //EXPORTS
-export { router };
+exports = { router };

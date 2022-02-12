@@ -1,4 +1,4 @@
-import { normalize, schema } from "normalizr";
+const { normalize, schema } = require("normalizr");
 
 //NORMALIZR SCHEMA
 const authorSchema = new schema.Entity("authors");
@@ -37,4 +37,4 @@ class MessagesModel {
 	}
 }
 
-export { MessagesModel };
+exports = { MessagesModel };

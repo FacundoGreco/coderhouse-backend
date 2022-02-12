@@ -1,6 +1,6 @@
-import { Router } from "express";
+const { Router } = require("express");
 const router = new Router();
-import { fork } from "child_process";
+const { fork } = require("child_process");
 
 //ROUTES
 //------------- GET HANDLING --------------------------------------//
@@ -29,4 +29,4 @@ router.get("/:cant?", async (req, res) => {
 	}
 });
 
-export { router };
+exports = { router };

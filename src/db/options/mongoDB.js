@@ -1,10 +1,10 @@
-import { MongoClient } from "mongodb";
+const { MongoClient } = require("mongodb");
 const uri =
 	"mongodb+srv://root:PkQ9aZqAlhtUHy3a@cluster0.1g2rb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 await client.connect();
 
-const messagesCollection = client.db("challenge-auth").collection("messages");
+const messagesCollection = client.db("challenge-cluster").collection("messages");
 
-export { messagesCollection };
+exports = { messagesCollection };

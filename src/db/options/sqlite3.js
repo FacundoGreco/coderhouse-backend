@@ -4,4 +4,4 @@ const options = {
 	useNullAsDefault: true,
 };
 
-export { options };
+exports = { options };

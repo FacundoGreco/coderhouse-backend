@@ -1,4 +1,4 @@
-import knexLib from "knex";
+const knexLib = require("knex");
 
 class Container {
 	constructor(options, table) {
@@ -77,4 +77,4 @@ class Container {
 	}
 }
 
-export { Container };
+module.exports = { Container };
